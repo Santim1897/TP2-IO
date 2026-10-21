@@ -1,10 +1,21 @@
+import sys
+import os
+from pathlib import Path
 import pandas as pd
 import numpy as np
 import scipy.stats as stats
 
+# Importar ruta portable
+try:
+    from src.paths import DATA_G08_CSV
+except ImportError:
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    DATA_G08_CSV = BASE_DIR / "data" / "PuertoSur_escalas_G08.csv"
+    if not DATA_G08_CSV.exists():
+        DATA_G08_CSV = BASE_DIR / "PuertoSur_escalas_G08.csv"
+
 # Load Grupo 8 dataset
-csv_path = 'C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/PuertoSur_escalas_G08.csv'
-df = pd.read_csv(csv_path)
+df = pd.read_csv(DATA_G08_CSV)
 df['fecha_hora_arribo'] = pd.to_datetime(df['fecha_hora_arribo'])
 df = df.sort_values('fecha_hora_arribo').reset_index(drop=True)
 
@@ -50,13 +61,13 @@ print(f"Promedio general horas de grúa individual: {df['crane_hours_single'].me
 df['crane_hours_dual'] = df['crane_hours_single'] / 1.7
 print(f"Promedio general horas de grúa dual (2 grúas con interferencia): {df['crane_hours_dual'].mean():.2f} h")
 
-# Maneuver times: uniform(1, 2) => mean = 1.5 h each => 3.0 h total
-mean_maneuver = 3.0
+# Maneuver times: en conjunto entre 1 y 2 horas por buque => media = 1.5 h total
+mean_maneuver = 1.5
 mean_service_time_single = df['crane_hours_single'].mean() + mean_maneuver
 mean_service_time_dual = df['crane_hours_dual'].mean() + mean_maneuver
 
-print(f"\nTiempo de berma medio (con 1 grúa): {mean_service_time_single:.2f} h")
-print(f"Tiempo de berma medio (con 2 grúas): {mean_service_time_dual:.2f} h")
+print(f"\nTiempo de berma medio (con 1 grúa y maniobra conjunta 1.5h): {mean_service_time_single:.2f} h")
+print(f"Tiempo de berma medio (con 2 grúas y maniobra conjunta 1.5h): {mean_service_time_dual:.2f} h")
 
 # Seasonality by month
 df['month'] = df['fecha_hora_arribo'].dt.month

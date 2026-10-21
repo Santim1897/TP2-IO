@@ -1,8 +1,14 @@
+import sys
+import os
+from pathlib import Path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import pandas as pd
 from src.simulador import PuertoSurSim
+from src.paths import DATA_G08_CSV
 import time
 
-df = pd.read_csv('C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/PuertoSur_escalas_G08.csv')
+df = pd.read_csv(DATA_G08_CSV)
 df['fecha_hora_arribo'] = pd.to_datetime(df['fecha_hora_arribo'])
 
 print("Running test with 1000 scales...")
