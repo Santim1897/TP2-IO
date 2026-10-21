@@ -1,34 +1,36 @@
 # TP2 - Simulación de Eventos Discretos: Terminal Portuaria "Puerto Sur"
 
 **ITBA - 11.51 Investigación Operativa (2026 2° Cuatrimestre)**  
-**Grupo Asignado:** Grupo 8
+**Grupo:** Grupo 08  
+**Dataset Oficial:** `data/PuertoSur_escalas_G08.csv` (8.852 escalas históricas)
 
----
-
-## 📌 Descripción del Proyecto
-Este repositorio contiene el desarrollo del Trabajo Práctico N° 2 de Investigación Operativa, consistente en el modelado conceptual, análisis de datos de entrada, implementación de un simulador de eventos discretos (DES) en Python/SimPy y experimentación estadística para la **Terminal Portuaria Puerto Sur**.
-
-Los objetivos principales incluyen:
-- Ajuste estadístico de arribos y portes de buques a partir de 3 años de datos históricos (`data/PuertoSur_escalas_G08.csv`).
-- Evaluación de la estadía promedio respecto al umbral crítico de **16 horas**.
-- Capacidad máxima del puerto y evaluación de una 4ta grúa STS.
-- Impacto de la congestión del patio de 3.000 slots y ventanas horarias de camiones.
-- Factibilidad de la incorporación de temporada de cruceros con reserva exclusiva de berma.
-- Evaluación de proyectos de inversión bajo incertidumbre (proyecto industrial y 4ta berma de USD 12M).
+Este repositorio contiene el desarrollo del Trabajo Práctico N° 2 de Investigación Operativa: modelado conceptual, análisis de datos de entrada, implementación de un simulador de eventos discretos (DES) en Python con **SimPy**, análisis estadístico riguroso (Tukey HSD, ANOVA, intervalos de confianza al 95%), teoría de colas a priori ($M/M/c$ y $M/G/c$) y recomendaciones estratégicas de negocio para la **Terminal Portuaria Puerto Sur**.
 
 ---
 
 ## 📂 Estructura del Repositorio
+
 ```text
-├── data/                    # Datasets históricos (G08 como principal)
-├── src/
-│   ├── data_analysis/       # Carga, EDA y ajuste de distribuciones empíricas
-│   ├── simulation/          # Núcleo del simulador en SimPy (recursos, procesos y entidades)
-│   └── experiments/         # Scripts para correr los escenarios e incisos (a - g)
-├── notebooks/               # Visualizaciones interactivas y gráficos
-├── docs/                    # Informe final y diagramas conceptuales (IDEF0)
-├── AGENTS.md                # Reglas maestras del proyecto para modelos de IA
-├── requirements.txt         # Dependencias del proyecto
+TP2-IO/
+├── data/                            <- Datasets históricos (G08 como principal) y parámetros
+│   ├── PuertoSur_escalas_G08.csv
+│   └── distribuciones_g08.json
+├── plots/                           <- Figuras analíticas a 300 DPI y tablas resumen
+├── src/                             <- Código fuente modular
+│   ├── paths.py                     <- Resolución centralizada de rutas relativas
+│   ├── data_analysis.py             <- Ingesta y análisis exploratorio del dataset G08
+│   ├── data_analysis_fitter.py      <- Ajuste formal de distribuciones y bondad de ajuste (K-S / Chi²)
+│   ├── simulador.py                 <- Motor central de simulación de eventos discretos en SimPy
+│   ├── queue_theory_apriori.py      <- Modelo analítico de colas a priori (Erlang C y Allen-Cunneen)
+│   ├── run_baseline.py              <- Simulación de la operación actual (Consignas a y b)
+│   ├── run_experiments.py           <- Batería multiescenario completa (Consignas c a g)
+│   ├── generate_plots.py            <- Generación de figuras analíticas a 300 DPI
+│   └── generate_word_report.py      <- Exportación del informe ejecutivo a formato Word
+├── docs/                            <- Documentación técnica y diagramas (IDEF0)
+├── INFORME_EJECUTIVO_PUERTO_SUR.md  <- Informe final exhaustivo y autocontenido de todo el TP
+├── MODELO_CONCEPTUAL_G08.md         <- Documento del Modelo Conceptual
+├── AGENTS.md                        <- Reglas maestras del proyecto para modelos de IA
+├── requirements.txt                 <- Dependencias del entorno de Python
 └── README.md
 ```
 
@@ -57,6 +59,11 @@ Los objetivos principales incluyen:
 3. **Instalar dependencias:**
    ```bash
    pip install -r requirements.txt
+   ```
+
+4. **Ejecutar la suite completa:**
+   ```bash
+   python main.py
    ```
 
 ---

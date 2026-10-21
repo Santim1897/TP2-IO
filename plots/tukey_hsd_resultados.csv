@@ -1,0 +1,7 @@
+group1,group2,meandiff,p-adj,lower,upper,reject
+1_Actual_3G_3B,2_Mejora_4G_3B,-8.298,0.0,-9.7155,-6.8804,True
+1_Actual_3G_3B,3_Crucero_Excl,24.0778,0.0,22.6602,25.4954,True
+1_Actual_3G_3B,4_Camion_Penal,-1.0486,0.2277,-2.4662,0.3689,False
+2_Mejora_4G_3B,3_Crucero_Excl,32.3758,0.0,30.9582,33.7934,True
+2_Mejora_4G_3B,4_Camion_Penal,7.2494,0.0,5.8318,8.6669,True
+3_Crucero_Excl,4_Camion_Penal,-25.1264,0.0,-26.544,-23.7089,True
