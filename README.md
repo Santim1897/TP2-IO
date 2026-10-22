@@ -7,6 +7,16 @@ Este repositorio contiene la resolución integral, modelado conceptual, implemen
 
 ---
 
+## 🎯 Estado de Entregas y Documentación Clave
+
+> [!IMPORTANT]
+> **ENTREGA 25/10/2026: MODELO CONCEPTUAL (RÚBRICA DE 7 PUNTOS)**  
+> Para la primera entrega se evalúa exclusivamente el modelo conceptual del sistema.  
+> 👉 **Tablero de diagnóstico y puntos críticos a corregir:** [docs/DIAGNOSTICO_MODELO_CONCEPTUAL.md](docs/DIAGNOSTICO_MODELO_CONCEPTUAL.md)  
+> 👉 **Hoja de ruta y backlog del equipo:** [docs/BACKLOG_AUDITORIA.md](docs/BACKLOG_AUDITORIA.md)
+
+---
+
 ## 📁 Estructura del Repositorio
 
 ```text
