@@ -385,5 +385,5 @@ def build_word_report(output_path="INFORME_EJECUTIVO_PUERTO_SUR.docx"):
     print(f"Documento Word guardado exitosamente en: {output_path}")
 
 if __name__ == "__main__":
-    out = sys.argv[1] if len(sys.argv) > 1 else "C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/INFORME_EJECUTIVO_PUERTO_SUR.docx"
+    out = sys.argv[1] if len(sys.argv) > 1 else str(__import__("src.paths", fromlist=["BASE_DIR"]).BASE_DIR / "INFORME_EJECUTIVO_PUERTO_SUR.docx")
     build_word_report(out)

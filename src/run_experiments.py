@@ -5,18 +5,19 @@ Ejecuta todos los experimentos para responder las consignas (b) a (g).
 
 import sys
 import os
+from pathlib import Path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pandas as pd
 import numpy as np
 from src.simulador import PuertoSurSim
+from src.paths import DATA_G08_CSV, PLOTS_DIR
 import time
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 import scipy.stats as stats
 
 def run_all_experiments():
-    csv_path = 'C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/PuertoSur_escalas_G08.csv'
-    df = pd.read_csv(csv_path)
+    df = pd.read_csv(DATA_G08_CSV)
     df['fecha_hora_arribo'] = pd.to_datetime(df['fecha_hora_arribo'])
     
     print("================================================================")
@@ -51,7 +52,7 @@ def run_all_experiments():
         {'Config': 'Actual_3G_3B', 'W': w_base, 'Wq': wq_base, 'Ws': ws_base, 'Pct_Excede_16h': pct16_base},
         {'Config': 'Mejora_4G_3B', 'W': w_4g, 'Wq': wq_4g, 'Ws': ws_4g, 'Pct_Excede_16h': pct16_4g}
     ])
-    df_res_base_summary.to_csv('C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/resumen_base_vs_4gruas.csv', index=False)
+    df_res_base_summary.to_csv(PLOTS_DIR / 'resumen_base_vs_4gruas.csv', index=False)
 
     # -------------------------------------------------------------
     # EXPERIMENTO 2: Consigna (c) - Barrido de Demanda Diaria Máxima
@@ -85,7 +86,7 @@ def run_all_experiments():
         print(f"Demanda: {buques_dia:.2f} b/d (Factor {f:.1f}) | 3 Grúas: W = {r3['tiempo_estadia_total'].mean():.2f} h (% >16h: {r3['excede_16h'].mean()*100:.1f}%) | 4 Grúas: W = {r4['tiempo_estadia_total'].mean():.2f} h (% >16h: {r4['excede_16h'].mean()*100:.1f}%)")
         
     df_capacidad = pd.DataFrame(capacidad_results)
-    df_capacidad.to_csv('C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/capacidad_demanda.csv', index=False)
+    df_capacidad.to_csv(PLOTS_DIR / 'capacidad_demanda.csv', index=False)
 
     # -------------------------------------------------------------
     # EXPERIMENTO 3: Consigna (d) - Políticas de Patio y Camiones
@@ -190,7 +191,7 @@ def run_all_experiments():
     
     # Guardar resumen de Tukey en CSV
     df_tukey_res = pd.DataFrame(data=tukey._results_table.data[1:], columns=tukey._results_table.data[0])
-    df_tukey_res.to_csv('C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/tukey_hsd_resultados.csv', index=False)
+    df_tukey_res.to_csv(PLOTS_DIR / 'tukey_hsd_resultados.csv', index=False)
     
     print("\n=== EXPERIMENTOS CONCLUIDOS EXITOSAMENTE ===")
 
