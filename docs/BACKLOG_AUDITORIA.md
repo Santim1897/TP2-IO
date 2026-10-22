@@ -1,6 +1,12 @@
 # Hoja de Ruta y Backlog de Auditoría — TP2 Puerto Sur (Grupo 8)
 
-Este documento centraliza el estado de avance, las tareas completadas y los próximos pasos para que todo el equipo (Bauti, Santi y Beni) esté sincronizado y no se dupliquen esfuerzos de cara a la entrega del **25/10/2026**.
+Este documento centraliza el estado de avance, las tareas completadas y los próximos pasos para que todo el equipo (Bauti, Santi y Beni) esté sincronizado y no se dupliquen esfuerzos de cara a las entregas de la materia.
+
+> [!IMPORTANT]
+> **ENTREGA INMEDIATA (25/10/2026): MODELO CONCEPTUAL ÚNICAMENTE**  
+> La cátedra exige para este **25 de Octubre** exclusivamente la entrega del **Modelo Conceptual** (los 7 puntos pautados en la página 1 del enunciado).  
+> La simulación completa, réplicas y análisis financiero corresponden a la entrega final posterior.  
+> 👉 **Diagnóstico detallado y puntos críticos a revisar:** [`docs/DIAGNOSTICO_MODELO_CONCEPTUAL.md`](DIAGNOSTICO_MODELO_CONCEPTUAL.md).
 
 ---
 
@@ -12,9 +18,10 @@ Este documento centraliza el estado de avance, las tareas completadas y los pró
 | **1. Portabilidad de Rutas** | ✅ **Completado** | `feat/audit-steps-1-2` | [PR #2](https://github.com/Santim1897/TP2-IO/pull/2) | `src/paths.py` (eliminación de rutas `C:/Users/ASUS/...`). Corrección de maniobra a 1.5h. |
 | **2. Input Modeling & K-S** | ✅ **Completado** | `feat/audit-steps-1-2` | [PR #2](https://github.com/Santim1897/TP2-IO/pull/2) | Ajuste Kolmogorov-Smirnov por servicio y `data/distribuciones_g08.json`. |
 | **3. Corrección Física de Simulación** | ✅ **Completado** | `feat/simulador-fisica-real` | [PR #3](https://github.com/Santim1897/TP2-IO/pull/3) | Grúas como `PriorityResource` (sin grúas fantasma), reserva preventiva de crucero y balance de patio. |
-| **4. Motor de 30 Réplicas & Tukey** | ⏳ **Próximo Paso** | — | — | Intervalos de confianza 95% y Tukey HSD sobre medias de réplicas independientes. |
-| **5. Regeneración de Gráficos (300 DPI)** | ⏳ **Pendiente** | — | — | Regenerar `fig1` a `fig4` y tablas CSV con números validados. |
-| **6. Informe Final (IDEF0) y PPT** | ⏳ **Pendiente** | — | — | Diagrama IDEF0, actualización de informe y presentación ejecutiva PowerPoint. |
+| **🎯 ENTREGA 25/10: Modelo Conceptual** | 🔄 **En Revisión** | `feat/simulador-fisica-real` | [PR #3](https://github.com/Santim1897/TP2-IO/pull/3) | Auditoría contra rúbrica de 7 puntos. Ver `docs/DIAGNOSTICO_MODELO_CONCEPTUAL.md`. |
+| **4. Motor de 30 Réplicas & Tukey** | ⏳ **Entrega Final** | — | — | Intervalos de confianza 95% y Tukey HSD sobre medias de réplicas independientes. |
+| **5. Regeneración de Gráficos (300 DPI)** | ⏳ **Entrega Final** | — | — | Regenerar `fig1` a `fig4` y tablas CSV con números validados. |
+| **6. Informe Final (IDEF0) y PPT** | ⏳ **Entrega Final** | — | — | Diagrama IDEF0 final, informe ejecutivo consolidado y presentación PowerPoint. |
 
 ---
 
@@ -46,13 +53,13 @@ Este documento centraliza el estado de avance, las tareas completadas y los pró
 
 ---
 
-### Fase 4: Motor de Réplicas y Análisis Estadístico Formal ⏳ (PRÓXIMO PASO)
+### Fase 4: Motor de Réplicas y Análisis Estadístico Formal ⏳ (Para entrega final)
 * Ejecutar 30 réplicas independientes con semillas distintas para el caso base y los escenarios de comparación.
 * Calcular Media $\pm$ Intervalo de Confianza al 95% ($\bar{X} \pm t_{\alpha/2} \frac{S}{\sqrt{n}}$).
 * Corregir el test de Tukey HSD: calcularlo sobre las medias muestrales de las 30 réplicas (eliminando el sesgo por autocorrelación temporal intra-cola).
 * Contrastar contra modelos analíticos de teoría de colas ($M/M/3$ y aproximación de Allen-Cunneen para $M/G/3$).
 
-### Fase 5: Regeneración de Gráficos y Tablas ⏳
+### Fase 5: Regeneración de Gráficos y Tablas ⏳ (Para entrega final)
 * Ejecutar la batería multiescenario completa (incisos b al g) y actualizar:
   * `plots/fig1_capacidad_demanda.png` (3 vs 4 grúas y umbral 16h).
   * `plots/fig2_desglose_estadia.png` (Espera $W_q$ vs Servicio $W_s$).
@@ -60,7 +67,7 @@ Este documento centraliza el estado de avance, las tareas completadas y los pró
   * `plots/fig4_tukey_hsd.png` (Tukey HSD con IC 95% corregido).
   * Tablas CSV complementarias.
 
-### Fase 6: Informe Final, Diagrama IDEF0 y Presentación Ejecutiva ⏳
-* Diseñar e incorporar el **Diagrama IDEF0** en `docs/` y en el informe.
+### Fase 6: Informe Final, Diagrama IDEF0 Consolidado y Presentación Ejecutiva ⏳ (Para entrega final)
+* Diseñar e incorporar el **Diagrama IDEF0** definitivo en `docs/` y en el informe.
 * Actualizar el informe ejecutivo (`INFORME_EJECUTIVO_PUERTO_SUR.md` y `.docx`) con los resultados estadísticos definitivos.
 * Crear la presentación en diapositivas (`.pptx`) estructurada para la defensa oral del TP.
