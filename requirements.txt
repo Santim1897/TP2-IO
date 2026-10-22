@@ -1,6 +1,21 @@
-simpy>=4.1.0
+# Simulación de Eventos Discretos
+simpy>=4.1.1
+
+# Manipulación de datos y cálculo numérico
 pandas>=2.0.0
 numpy>=1.24.0
+
+# Estadística, inferencia y ajuste de distribuciones
 scipy>=1.10.0
 statsmodels>=0.14.0
+
+# Visualización
 matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Exportación y reportes
+python-docx>=1.0.0
+
+# Entorno interactivo y tests
+jupyterlab>=4.0.0
+pytest>=7.3.0
