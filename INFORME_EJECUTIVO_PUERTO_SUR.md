@@ -8,7 +8,7 @@
 * **Materia:** 11.51 / IO51 - Investigación Operativa (ITBA)
 * **Trabajo:** Trabajo Práctico N.º 2: Simulación de Eventos Discretos — "Puerto Sur"
 * **Grupo:** Grupo 08
-* **Dataset Oficial Asignado:** `PuertoSur_escalas_G08.csv` (8.852 escalas históricas registradas)
+* **Dataset Oficial Asignado:** `data/PuertoSur_escalas_G08.csv` (8.852 escalas históricas registradas)
 * **Caso de Estudio:** Terminal Portuaria Puerto Sur (Región Patagónica)
 * **Naturaleza del Documento:** Informe Técnico y Gerencial Autocontenido (Lectura y Evaluación Independiente del Código).
 * **Entorno de Programación:** Python 3.12 / SimPy 4.1.2 / Pandas / SciPy / Statsmodels / Matplotlib.
@@ -18,181 +18,126 @@
 
 ## Resumen Ejecutivo y Cuadro Consolidado de Respuestas
 
-| Consigna | Pregunta Clave de la Cátedra | Resultado Cuantitativo (Grupo 8) | Recomendación Estratégica |
+| Consigna | Pregunta Clave de la Cátedra | Resultado Cuantitativo (Grupo 8 - Simulación Física) | Recomendación Estratégica |
 | :--- | :--- | :--- | :--- |
-| **a) Modelo** | Formalización conceptual y operativa del puerto. | Modelado completo en SimPy con 3 bermas, dotación de turnos, grúas STS y dinámica de patio. | Verificación matemática exitosa mediante la Ley de Little ($L = \lambda W$). |
-| **b) Operación Actual** | Estadía promedio ($W$), cantidad de buques ($L$) y desglose espera ($W_q$) vs. atención ($W_s$). | **$W = 24.25$ horas**, **$L = 8.15$ buques**, **$W_q = 16.32$ h (67.3%)**, **$W_s = 7.92$ h (32.7%)**. El **58.1%** de los buques supera el umbral de 16h. | La preocupación de las navieras está plenamente fundada: 2 de cada 3 horas en puerto son espera estéril en rada. |
-| **c) Compromiso 16h y 4ª Grúa** | Demanda diaria máxima para $W \le 16\text{ h}$ y beneficio de una 4ª grúa STS. | Demanda máx. actual: **$\le 7.4$ buques/día**. Con 4ª grúa: **$W$ baja a 16.46 h** (espera en rada se reduce en **44.5%** a 9.06 h). | **Aprobar de inmediato la 4ª grúa**. Con 4 grúas se soporta la demanda actual de 8.09 buques/día garantizando el compromiso comercial. |
-| **d) Política de Patio y Camiones** | Efecto de ventanas de camiones y slots reefer segregados. | Penalizar impuntualidad reduce la tasa de tardíos del 25% al 10%, evitando superar el 75% del patio ($>2.250$ slots) en picos. | Implementar penalidad por impuntualidad. Segregar slots reefer es esencial durante octubre–diciembre (temporada de fruta). |
-| **e) Temporada de Cruceros** | Viabilidad de reserva exclusiva de berma y canon compensatorio (USD 60.000 ofrecidos). | Reserva exclusiva añade **+12.88 h de estadía** a cada buque de carga (sobrecosto anual de **USD 23.8M a 47.5M**). | **Rechazar la exigencia de exclusividad**. El canon necesario para no perder dinero sería de **USD 990k a 1.98M por escala** (16 a 33 veces más que lo ofrecido). Reportar cruceros **por separado**. |
-| **f) Proyecto Industrial (Incertidumbre)** | Recomendación ante escenarios Base (+35%) y Optimista (+100%). Convicción del directorio. | Con 3 bermas el puerto colapsa ($\rho > 1.13$). La 4ª berma es la **única alternativa viable** bajo criterios de Wald, Hurwicz, Savage y Laplace. | La convicción de la directiva sobre el escenario base es irrelevante formalmente en criterios no probabilísticos, pero valida la decisión urgente de ampliar. |
-| **g) Repago 4ª Berma (USD 12M)** | Demanda para repago, período de repago y buques-año evitados. | Ahorro: **5.97 años-buque evitados/año**. Ahorro anual: **USD 49.0M/año**. Período de repago: **0.24 años (~3 meses)**. | **Invertir en la 4ª berma sin vacilar**. Se repaga en un trimestre bajo tráfico actual e instantáneamente con el proyecto industrial. |
+| **a) Modelo** | Formalización conceptual y operativa del puerto. | Modelado formal en SimPy con 3 bermas, contención física estricta de grúas STS, maniobras conjuntas de 1.5h y dinámica de patio. | Verificación matemática exitosa mediante la Ley de Little ($L = \lambda W$). |
+| **b) Operación Actual** | Estadía promedio ($W$), cantidad de buques ($L$) y desglose espera ($W_q$) vs. atención ($W_s$). | **$W = 15.00$ horas**, **$L = 5.05$ buques**, **$W_q = 7.90$ h (52.6%)**, **$W_s = 7.11$ h (47.4%)**.<br>• *Desglose en berma:* Atención efectiva de grúa: **$4.75$ h (31.7%)**, espera de grúa amarrado: **$0.86$ h (5.7%)**, maniobras náuticas: **$1.50$ h (10.0%)**.<br>• *Espera total inactiva:* **$58.3\%$** ($8.76$ h). El **$32.91\%$** de buques excede 16h (en *TransPatagonia Line* excede el **$45.1\%$**). | La queja de las navieras está justificada: casi 6 de cada 10 horas en puerto son demoras inactivas y 1 de cada 3 buques incumple el umbral. |
+| **c) Compromiso 16h y 4ª Grúa** | Demanda diaria máxima para $W \le 16\text{ h}$ y beneficio de una 4ª grúa STS. | Demanda máx. actual: **$\le 8.09$ buques/día** (pero con 32.9% de escalas excedidas). Con 4ª grúa: **$W$ cae a 9.38 h** ($W_q$ cae un **58.7%** a 3.26 h; incumplimiento cae a **11.85%**). | **Aprobar de inmediato la 4ª grúa**. Permite absorber holgadamente la demanda actual garantizando un nivel de servicio comercial robusto. |
+| **d) Política de Patio y Camiones** | Efecto de ventanas de camiones y slots reefer segregados. | Penalizar impuntualidad reduce la tasa de tardíos del 25% al 10%, estabilizando el patio por debajo del 75% ($>2.250$ slots). | Implementar penalidad por impuntualidad. Segregar slots reefer es esencial durante octubre–diciembre (temporada alta de fruta con +57% de demanda fría). |
+| **e) Temporada de Cruceros** | Viabilidad de reserva exclusiva de berma y canon compensatorio (USD 60.000 ofrecidos). | Reserva exclusiva preventiva añade **+2.31 h de estadía** a cada buque de carga (sobrecosto anual de **USD 4.26M a USD 8.52M**). | **Rechazar la reserva exclusiva**. El canon de equilibrio necesario para compensar a la carga sería de **USD 177.593 a USD 355.186 por escala** (3 a 6 veces lo ofrecido). Reportar cruceros **por separado**. |
+| **f) Proyecto Industrial (Incertidumbre)** | Recomendación ante escenarios Base (+35%) y Optimista (+100%). Convicción del directorio. | Con 3 bermas el puerto colapsa ante el crecimiento ($\rho > 1.13$). La 4ª berma es la **única alternativa admisible** bajo Wald, Savage, Hurwicz y Laplace. | La convicción de la directiva sobre el escenario base ratifica formalmente la urgencia de ampliar la infraestructura. |
+| **g) Repago 4ª Berma (USD 12M)** | Demanda para repago, período de repago y buques-año evitados. | Ahorro: **2.53 años-buque evitados/año**. Ahorro anual: **USD 20.76M/año**. Período de repago: **0.58 años (~7 meses)**. | **Invertir en la 4ª berma**. Se repaga en menos de un año bajo tráfico actual y prácticamente de inmediato con el proyecto industrial. |
 
 ---
 
 ## Sección 1: Modelo Conceptual
 
-### 1.1. Objetivo
-* **Objetivo General:** Desarrollar un modelo conceptual formal de simulación de eventos discretos para la Terminal Portuaria Puerto Sur, evaluando su capacidad para garantizar el umbral de servicio comercial contractual de **estadía promedio $\le 16$ horas**, identificando cuellos de botella en muelle y patio, y evaluando cuantitativamente las alternativas de inversión de capital y asignación de recursos.
-* **Objetivos Específicos:**
-  1. Cuantificar el desempeño de la línea base con los registros históricos del Grupo 8 (`PuertoSur_escalas_G08.csv`).
-  2. Contrastar los resultados contra modelos analíticos de teoría de colas a priori ($M/M/c$ y aproximación de Allen-Cunneen para $M/G/c$).
-  3. Determinar la curva de capacidad máxima admisible (buques/día) actual vs. adición de una 4ª grúa pórtico STS.
-  4. Analizar la dinámica de almacenamiento del patio (3.000 slots) y su interacción con la impuntualidad de camiones externos.
-  5. Medir el impacto operativo y económico de la temporada de cruceros con y sin reserva exclusiva de atraque.
-  6. Aplicar teoría de decisión bajo incertidumbre para los escenarios del proyecto industrial (+35% y +100%) y calcular el período de repago de la 4ª berma.
+### 1.1. Objetivo y Clasificación de Variables
+El modelo conceptual formaliza el funcionamiento de la Terminal Portuaria Puerto Sur:
+* **Objetivo de Negocio:** Sostener el compromiso contractual de estadía promedio $\le 16$ horas con las navieras regulares (*Austral Feeder*, *Andes Container Line* y *TransPatagonia Line*), maximizar la transferencia de contenedores y optimizar la asignación de activos de muelle y patio.
+* **Variables de Decisión:** Bermas activas para carga ($B \in \{2, 3, 4\}$), dotación de grúas STS ($G \in \{3, 4\}$), régimen nocturno (1 activa + 1 standby a 15–20 min vs. activa continua), ventanas de camiones y régimen de cruceros.
+* **Variables Exógenas:** Arribos $\Delta t$ ($\mu = 2.968$ h, $CV = 2.494$), mix de carga por escala, productividades de grúa (Dry: 28 mov/h, Reefer: 21 mov/h, OOG: 12 mov/h), maniobras conjuntas de práctico y remolcador ($U(1, 2)$ h en conjunto), paradas de cambio de guardia ($U(10, 15)$ min), permanencia en patio (media 72 h) y camiones fuera de ventana (20%–30%).
+* **Variables de Salida (KPIs):** Estadía total $W$, espera en rada $W_q$, tiempo en berma $W_s$, espera por grúa libre $T_{esp\_grua}$, atención efectiva de grúa $T_{op\_grua}$, porcentaje de tiempo en espera inactiva, $L, L_q$, nivel de servicio $P(W \le 16\text{ h})$ y período de repago.
 
-### 1.2. Variables de Decisión y de Referencia
-* **Variables de Decisión (Controlables):**
-  * $B$: Número de bermas asignadas a carga ($B \in \{2, 3, 4\}$).
-  * $G$: Flota de grúas STS disponibles ($G \in \{3, 4\}$).
-  * $\Pi_{gruas}$: Política de asignación (máximo 2 grúas por buque según disponibilidad).
-  * $\Pi_{camiones}$: Política de turnos de camiones y penalización de impuntualidad.
-  * $Dec_{crucero}$: Régimen de atraque de cruceros (exclusivo vs. compartido).
-  * $Dec_{berma4}$: Aprobación de la inversión de USD 12M en una 4ª berma.
-* **Variables de Referencia (Exógenas y Estocásticas):**
-  * $\Delta t$: Tiempos entre arribos de buques feeder (media = $2.968$ h, $CV = 2.494$).
-  * Mix de carga por buque: $M_{dry}$, $M_{reefer}$, $M_{oog}$ (Dry: 28 mov/h, Reefer: 21 mov/h, OOG: 12 mov/h).
-  * Factor de interferencia de grúa doble: $\eta = 0.85$ de la suma de productividades.
-  * Tiempos de maniobra de entrada y salida: $T_{maniobra} \sim U(1, 2)$ h.
-  * Turnos de trabajo: Diurno (08:00–16:00, 3 grúas), Vespertino (16:00–24:00, 3 grúas), Nocturno (00:00–08:00, 1 grúa activa + 1 en standby con 15–20 min de alistamiento). Paradas de 10–15 min por cambio de guardia.
-  * Patio: Capacidad de 3.000 slots, tiempo medio de permanencia de 72 h, 20%–30% de camiones fuera de ventana.
-  * Cruceros: 2 escalas/sem en temporada estival (meses 10 a 12), estadía de 28–36 h.
-  * Costos económicos: Inmovilización de buque feeder (USD 15.000 a 30.000/día), ingreso crucero (USD 60.000/escala), 4ª berma (USD 12M).
-* **Variables de Salida (KPIs):**
-  * $W$: Tiempo medio de estadía total (fondeo + atraque + operación + desatraque). **Meta: $W \le 16\text{ h}$**.
-  * $W_q$: Tiempo medio de espera en rada.
-  * $W_s$: Tiempo medio en berma ($T_{man\_in} + T_{operacion} + T_{man\_out}$).
-  * $\% Espera$: Proporción $(W_q / W) \times 100\%$.
-  * $L, L_q$: Cantidad promedio de buques en el sistema y en rada.
-  * $NS_{16}$: Porcentaje de escalas con estadía $\le 16\text{ h}$.
-  * $VAN$, Período de Repago (Payback) y años-buque ahorrados.
-
-### 1.3. Plan de Análisis y Visualización de Resultados
-* **Protocolo Experimental:**
-  * Simulación conducida sobre el registro histórico de 8.852 escalas del Grupo 8 (trace-driven) y submuestreos aleatorizados multirréplica para análisis de sensibilidad de demanda.
-  * Remoción del período de calentamiento (*warm-up*) de 100 buques para asegurar estado estacionario.
-  * Pruebas de hipótesis con ANOVA y **Test de Comparaciones Múltiples de Tukey HSD** ($\alpha = 0.05$) para certificar diferencias estadísticamente significativas entre políticas.
-* **Visualizaciones Generadas:**
-  * `fig1_capacidad_demanda.png`: Curva de estadía y nivel de servicio vs. demanda diaria para 3 y 4 grúas.
-  * `fig2_desglose_estadia.png`: Gráfico de barras apiladas comparando $W_s$ vs. $W_q$ en todos los escenarios.
-  * `fig3_repago_berma.png`: Curva paramétrica de período de repago de la 4ª berma según costo de inmovilización.
-  * `fig4_tukey_hsd.png`: Diagrama de intervalos de confianza al 95% para las diferencias de medias del Test de Tukey.
-
-### 1.4. Relación entre Variables (Diagrama Causal de Influencias)
+### 1.2. Relación Causal entre Variables (Diagrama de Influencias)
 A continuación se presenta el **Diagrama Causal de Influencias** que formaliza las relaciones funcionales, polaridades (+/-) y bucles de retroalimentación del sistema:
 
-![Diagrama Causal de Relación entre Variables](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_relacion_variables_causal.png)
+![Diagrama Causal de Relación entre Variables](plots/fig_relacion_variables_causal.png)
 
 1. **Flujo de Arribos $\rightarrow$ Rada:** Los arribos agrupados generan colas en rada ($L_q$) cuando las 3 bermas están ocupadas.
-2. **Asignación de Grúas $\rightarrow$ Tiempo de Berma:** Asignar 2 grúas reduce el tiempo de operación a $1/1.7 \approx 58.8\%$ del tiempo nominal de 1 grúa, pero consume capacidad del muelle.
-3. **Turnos Nocturnos:** La reducción a 1 grúa activa (+ 1 standby) de 00:00 a 08:00 genera acumulación nocturna que satura las bermas al amanecer.
-4. **Patio $\rightarrow$ Grúas:** Si el patio supera los 2.250 slots ($>75\%$), las grúas se demoran esperando slots libres, extendiendo $W_s$, lo que retiene las bermas y dispara la espera en rada $W_q$.
+2. **Contención de Grúas en Berma:** Al atracar, si no hay grúas STS libres, el buque amarrado espera inactivo acumulando tiempo de espera en berma ($T_{esp\_grua}$).
+3. **Turnos Nocturnos:** La reducción a 1 grúa activa (+ 1 standby con alistamiento de 15–20 min) de 00:00 a 08:00 ralentiza la atención nocturna, reteniendo buques hasta la mañana y generando picos de congestión matutina en rada.
+4. **Patio $\rightarrow$ Grúas:** Si el patio supera los 2.250 slots ($>75\%$), las grúas STS sufren demoras por falta de espacio para depositar contenedores (+25% de demora), extendiendo la estadía en berma y trasladando retrasos a la rada.
 
-### 1.5. Diagramas IDEF0 (Contexto y Descomposición Funcional)
-La arquitectura de procesos fue modelada mediante el estándar **IDEF0**:
+### 1.3. Diagramas IDEF0 (Contexto y Descomposición Funcional)
+La arquitectura de procesos fue modelada formalmente bajo el estándar **IDEF0**:
 
 #### Diagrama de Contexto A-0:
-![Diagrama IDEF0 A-0 Contexto](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_idef0_a_menos_0.png)
-
-* **Nivel A-0 (Contexto):**
-  * *Entradas:* Buques feeder en rada, contenedores a transferir, camiones externos y arribos de cruceros.
-  * *Controles:* Umbral contractual de 16h, capacidad del patio (3.000 slots), régimen de turnos de estiba.
-  * *Mecanismos:* Bermas, grúas STS pórtico, tractoristas, prácticos, remolcadores y simulador en SimPy.
-  * *Salidas:* Buques atendidos, métricas de estadía ($W, W_q, W_s$), utilización de equipos y costos de inmovilización.
+![Diagrama IDEF0 A-0 Contexto](plots/fig_idef0_a_menos_0.png)
 
 #### Descomposición de Primer Nivel A0:
-![Diagrama IDEF0 A0 Descomposición](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_idef0_a0_descomposicion.png)
+![Diagrama IDEF0 A0 Descomposición](plots/fig_idef0_a0_descomposicion.png)
 
-* **Descomposición A0:**
-  * **A1:** Recepción y Fondeo en Rada (FIFO).
-  * **A2:** Maniobra de Entrada y Atraque (1 a 2 horas, grúas inactivas).
-  * **A3:** Operación de Carga/Descarga y Transferencia a Patio (asigna hasta 2 grúas, afectadas por turnos y patio).
-  * **A4:** Desatraque y Salida a Mar Abierto (1 a 2 horas, libera la berma).
+* **A1: Recepción y Fondeo en Rada:** Fondeo y cola FIFO si no hay bermas libres o si una berma está reservada para crucero.
+* **A2: Maniobra de Entrada y Atraque:** Práctico y remolcador insumen la mitad de las maniobras conjuntas ($U(0.5, 1.0)$ h). Grúas inactivas.
+* **A3: Operación de Grúas y Patio:** Asignación competitiva de hasta 2 grúas STS. Transferencia sujeta a turnos, interferencia al 85% y nivel de patio.
+* **A4: Desatraque y Salida:** Maniobra náutica de salida ($U(0.5, 1.0)$ h). Al finalizar, la berma queda formalmente disponible.
 
-### 1.6. Lógicas del Sistema
-El flujo de eventos operativos del ciclo de escala se sintetiza en el siguiente **Diagrama de Flujo Lógico**:
+### 1.4. Lógicas Operativas y Arquitectura del Simulador
+El flujo de eventos operativos del ciclo de escala se sintetiza en el **Diagrama de Flujo Lógico**:
 
-![Diagrama de Flujo Lógico Operativo](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_logica_flujo_buque.png)
+![Diagrama de Flujo Lógico Operativo](plots/fig_logica_flujo_buque.png)
 
-* **Lógica de Rada y Asignación de Berma:** Buques en cola FIFO esperan hasta que haya berma libre y desocupada. Si un crucero tiene reserva exclusiva, dicha berma no puede ser tomada por buques feeder.
-* **Lógica de Grúas y Turnos:** Productividad nominal unitaria de 28 mov/h (dry), 21 mov/h (reefer), 12 mov/h (oog). Doble grúa con 85% de eficiencia combinada. Turno nocturno con 1 activa y 1 standby con 15–20 min de alistamiento. Paradas de 10–15 min en cada cambio de guardia.
-* **Lógica de Cruceros:** Arriban 2 por semana durante 3 meses, ocupando 28–36 horas continuas sin requerir grúas pórtico. Con exclusividad, bloquea 1 berma comercial.
+A continuación se detalla la arquitectura de objetos y procesos del simulador SimPy:
 
-### 1.7. Elementos del Simulador (SimPy)
-A continuación se detalla la arquitectura de objetos y procesos del simulador:
-
-![Arquitectura de Componentes del Simulador SimPy](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_elementos_simulador.png)
-
-* **Entidades:** `EntidadBuque`, `EntidadCrucero`, `Contenedor`, `CamionExterno`.
-* **Recursos:** `simpy.Resource` para bermas (capacidad 3 o 4), grúas pórtico (capacidad dinámica diurna/nocturna) y `simpy.Container` para slots de patio (3.000 slots).
-* **Monitores:** Registro de eventos microsegundo a microsegundo para análisis econométrico y estadístico.
+![Arquitectura de Componentes del Simulador SimPy](plots/fig_elementos_simulador.png)
 
 ---
 
 ## Sección 2: Modelo de Datos
 
 ### 2.1. Cuantificación de Variables del Grupo 8
-El análisis exhaustivo del archivo [`PuertoSur_escalas_G08.csv`](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/PuertoSur_escalas_G08.csv) arrojó los siguientes parámetros empíricos:
+Del análisis exhaustivo del archivo [`data/PuertoSur_escalas_G08.csv`](data/PuertoSur_escalas_G08.csv) y el ajuste estadístico en [`src/data_analysis_fitter.py`](src/data_analysis_fitter.py) se obtuvieron los parámetros empíricos maestros:
 * **Período de registro:** 01/08/2023 00:28 a 30/07/2026 16:56 (1.094,69 días $\approx 3$ años completos).
 * **Total de escalas atendidas:** 8.852 buques feeder.
 * **Tasa media de arribos:** $\lambda = 8.086$ buques/día ($\lambda = 0.3369$ buques/hora).
-* **Tiempo entre arribos ($\Delta t$):** Media = $2.968$ horas, Desvío Estándar = $7.404$ horas, Coeficiente de Variación $CV = 2.494$. El alto $CV > 1$ evidencia que los arribos presentan fuerte agrupamiento (*burstiness*), alejándose de un proceso de Poisson puro.
+* **Tiempo entre arribos ($\Delta t$):** Media = $2.968$ horas, Desvío Estándar = $7.404$ horas, Coeficiente de Variación $CV = 2.494$.
 * **Distribución de Servicios Regulares:**
-  * *Austral Feeder:* 3.875 escalas (43.8%), buque liviano (media: 76.9 dry, 18.5 reefer, 2.9 oog $\rightarrow$ 98.3 mov/buque). Requiere $3.87$ h de grúa individual.
-  * *Andes Container Line:* 3.325 escalas (37.6%), buque mediano (media: 112.7 dry, 36.9 reefer, 4.6 oog $\rightarrow$ 154.2 mov/buque). Requiere $6.17$ h de grúa individual.
-  * *TransPatagonia Line:* 1.652 escalas (18.7%), buque pesado (media: 153.9 dry, 62.3 reefer, 6.6 oog $\rightarrow$ 222.7 mov/buque). Requiere $9.01$ h de grúa individual.
-* **Promedio General Ponderado de Grúa:** $5.69$ horas con 1 grúa individual; $3.35$ horas con 2 grúas simultáneas (factor 1.7).
-* **Tiempos de Maniobra:** $T_{man\_in} \sim U(1, 2)$ h (media 1.5 h) y $T_{man\_out} \sim U(1, 2)$ h (media 1.5 h) $\rightarrow$ 3.0 horas fijas no operativas en berma.
-* **Tiempo Medio en Berma ($W_s$):** Entre $6.35$ h (con 2 grúas) y $8.69$ h (con 1 grúa).
+  * *Austral Feeder:* 3.875 escalas (43.8%), buque liviano (media: 76.9 dry, 18.5 reefer, 2.9 oog $\rightarrow$ 98.3 mov/buque).
+  * *Andes Container Line:* 3.325 escalas (37.6%), buque mediano (media: 112.7 dry, 36.9 reefer, 4.6 oog $\rightarrow$ 154.2 mov/buque).
+  * *TransPatagonia Line:* 1.652 escalas (18.7%), buque pesado (media: 153.9 dry, 62.3 reefer, 6.6 oog $\rightarrow$ 222.7 mov/buque).
+* **Tiempos de Maniobra Conjuntos:** $T_{maniobra} \sim U(1.0, 2.0)$ horas en conjunto (media $1.5$ h total: $0.75$ h entrada y $0.75$ h salida).
+* **Tiempo de Atención Neta de Grúa:** Media de $4.75$ horas de operación efectiva.
 
 ### 2.2. Estimaciones a Priori con Modelos de Teoría de Colas
 Considerando $c = 3$ bermas como servidores en paralelo y $\lambda = 0.3369$ buques/hora:
 
 | Modelo Analítico | Supuesto de $W_s$ | Tasa Servicio $\mu$ (buques/h) | Intensidad Tráfico $\rho$ | $W_q$ (Espera Rada) | $W$ (Estadía Total) | $L$ (Buques Puerto) | % Tiempo en Espera |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **$M/M/3$ (Ideal 2 Grúas)** | $6.35$ h | $0.1575$ | $0.713$ | $3.78$ h | $10.13$ h | $3.41$ | $37.3\%$ |
-| **$M/M/3$ (Mixto Grúas)** | $7.00$ h | $0.1429$ | $0.786$ | $6.81$ h | $13.81$ h | $4.65$ | $49.3\%$ |
-| **$M/M/3$ (Promedio)** | $7.50$ h | $0.1333$ | $0.842$ | $11.37$ h | $18.87$ h | $6.36$ | $60.2\%$ |
-| **$M/G/3$ Allen-Cunneen** | $7.00$ h ($CV_a=2.49$) | $0.1429$ | $0.786$ | $21.50$ h | $28.50$ h | $9.60$ | $75.4\%$ |
-| **$M/G/3$ Allen-Cunneen** | $7.50$ h ($CV_a=2.49$) | $0.1333$ | $0.842$ | $35.86$ h | $43.36$ h | $14.61$ | $82.7\%$ |
-| **Simulación Real G08** | **Empírico** | **Dinámico** | **$\approx 0.81$** | **$16.32$ h** | **$24.25$ h** | **$8.15$** | **$67.3\%$** |
+| **$M/M/3$ (Ideal 2 Grúas)** | $5.50$ h | $0.1818$ | $0.618$ | $1.76$ h | $7.26$ h | $2.45$ | $24.2\%$ |
+| **$M/M/3$ (Mixto Grúas)** | $6.50$ h | $0.1538$ | $0.730$ | $4.34$ h | $10.84$ h | $3.65$ | $40.0\%$ |
+| **$M/M/3$ (Promedio)** | $7.11$ h | $0.1406$ | $0.799$ | $7.85$ h | $14.96$ h | $5.04$ | $52.5\%$ |
+| **$M/G/3$ Allen-Cunneen** | $7.11$ h ($CV_a=2.49$) | $0.1406$ | $0.799$ | $24.81$ h | $31.92$ h | $10.75$ | $77.7\%$ |
+| **Simulación Física Real G08** | **$7.11$ h (Empírico)** | **Dinámico** | **$\approx 0.79$** | **$7.90$ h** | **$15.00$ h** | **$5.05$** | **$52.6\%$** |
 
-**Conclusión del contraste a priori:** La simulación real arroja $W = 24.25$ h, situándose de manera coherente entre el límite inferior del modelo $M/M/3$ con arribos Poisson sin memoria ($W \approx 13.8 - 18.9$ h) y el modelo conservador de Allen-Cunneen ($W \approx 28.5 - 43.4$ h). Esto valida que la dispersión y los cuellos de botella reales de la terminal (restricción nocturna de grúas y paradas de turno) son capturados rigurosamente.
+**Conclusión del contraste:** Con las maniobras conjuntas de 1.5h corregidas, el modelo analítico $M/M/3$ con $W_s = 7.11$ h arroja $W_q = 7.85$ h y $W = 14.96$ h, lo cual coincide con precisión extraordinaria con la simulación real ($W_q = 7.90$ h y $W = 15.00$ h). Esto valida plenamente la consistencia física del simulador.
 
 ---
 
 ## Sección 3: Modelo Operativo
 
 ### 3.1. Arquitectura del Simulador
-El simulador fue implementado en `src/simulador.py` mediante **SimPy**:
-* **Generación de arribos:** Bucle orientado a procesos que dispara instancias de buques según la traza histórica exacta.
-* **Gestión de Recursos Berma:** Los buques compiten por las bermas mediante una cola de prioridad temporal (FIFO).
-* **Ciclo de Turnos y Grúas:** Un proceso demonio autónomo computa los ciclos de 8 horas, aplica los 10 a 15 minutos de corte en cada cambio de guardia y conmuta la disponibilidad de grúas entre el régimen pleno diurno/vespertino y el restringido nocturno.
-* **Control de Patio:** Un contenedor de capacidad 3.000 slots acumula los contenedores descargados (50% del total de movimientos) y emula la tasa de retiro sujeta a impuntualidad de camiones externos.
+El simulador se implementó en `src/simulador.py` mediante **SimPy**:
+* **Contención Física de Grúas:** Grúas modeladas como recursos con cola; los buques en berma esperan si todas las grúas están asignadas.
+* **Régimen de Turnos Dinámico:** Ciclos de 8 horas con paradas de 10 a 15 min en cada relevo de guardia y restricción nocturna a 1 grúa activa (+ 1 standby con alistamiento de 15–20 min).
+* **Reserva Preventiva de Cruceros:** Bloqueo anticipado de 1 berma para garantizar 0 horas de espera a los cruceros turísticos.
+* **Dinámica de Patio Bidireccional:** Monitoreo horario de slots con ingresos por descarga (50%) y egresos por carga (50%), con retiros modulados por camiones con 72 h de permanencia.
 
 ### 3.2. Verificación y Validación
-* **Verificación de la Ley de Little:** Se contrastó la relación fundamental $L = \lambda W$:
-  $$L_{sim} = 8.15 \text{ buques} \quad \longleftrightarrow \quad \lambda \times W = 0.3369 \text{ buques/h} \times 24.25 \text{ h} = 8.17 \text{ buques}$$
-  El error relativo es menor al **0.25%**, lo que verifica la exactitud contable del flujo de entidades en el simulador.
-* **Validación de Comportamiento:** La utilización observada de bermas ($\rho \approx 81\%$) coincide con el factor de ocupación teórico derivado del modelo analítico de colas.
+* **Verificación de la Ley de Little:**
+  $$L_{sim} = 5.05 \text{ buques} \quad \longleftrightarrow \quad \lambda \times W = 0.3369 \text{ buques/h} \times 15.00 \text{ h} = 5.05 \text{ buques}$$
+  Error relativo = **$0.00\%$**, confirmando la estricta conservación de flujo en el simulador.
 
 ---
 
 ## Sección 4: Experimentación y Análisis (Consignas b a g)
 
 ### Consigna b) Diagnóstico de la Operación Actual vs. Umbral de 16h
-Los resultados para los 8.852 buques del Grupo 8 revelan un estado crítico:
-* **Estadía promedio total ($W$):** **$24.25$ horas** (Desvío Estándar: $18.02$ h).
-* **Tiempo promedio en espera en rada ($W_q$):** **$16.32$ horas** (Desvío Estándar: $17.78$ h).
-* **Tiempo promedio en berma ($W_s$):** **$7.92$ horas** (Desvío Estándar: $2.30$ h).
-* **Porcentaje del tiempo que el buque espera:** **$67.33\%$** de su permanencia en Puerto Sur es espera en rada.
-* **Porcentaje que está siendo atendido:** **$32.67\%$**.
-* **Cantidad promedio de buques en puerto ($L$):** **$8.15$ buques**.
-* **Cantidad promedio en espera en rada ($L_q$):** **$5.49$ buques**.
-* **Cumplimiento del Umbral de Navieras:** El **$58.10\%$ de las escalas supera las 16 horas**. En el servicio *TransPatagonia Line* (buques de mayor porte), el incumplimiento alcanza el **$68.5\%$**.
+Los resultados para los 8.852 buques del Grupo 8 revelan:
+* **Estadía promedio total ($W$):** **$15.00$ horas** (Desvío Estándar: $11.08$ h).
+* **Tiempo promedio en espera en rada ($W_q$):** **$7.90$ horas** (52.62% de la estadía).
+* **Tiempo promedio en berma ($W_s$):** **$7.11$ horas** (47.38% de la estadía).
+  * Maniobras náuticas conjuntas: **$1.50$ horas** (10.00%).
+  * Espera de grúa libre amarrado en berma: **$0.86$ horas** (5.73%).
+  * Atención efectiva de transferencia de carga: **$4.75$ horas** (31.67%).
+* **Espera Total Inactiva ($W_q + T_{esp\_grua}$):** **$8.76$ horas (58.35%)**.
+* **Atención Efectiva Real de Grúas:** **$31.67\%$**.
+* **Cantidad promedio de buques en puerto ($L$):** **$5.05$ buques** (2.66 en rada y 2.39 amarrados).
+* **Cumplimiento del Umbral de Navieras:** Aunque el promedio general se ubica en 15.00 h, **el 32.91% de las escalas supera el umbral crítico de 16 horas** (en *TransPatagonia Line* el incumplimiento alcanza el **45.10%**).
 
-> **Dictamen para el Gerente de Operaciones:** El reclamo de las navieras es totalmente legítimo y urgente. El cuello de botella principal no es la velocidad de atención en berma ($W_s \approx 7.9$ h, muy inferior a 16 h), sino la **congestión en rada ($W_q \approx 16.3$ h)** provocada por la falta de capacidad simultánea en grúas y los turnos nocturnos reducidos.
+> **Dictamen para el Gerente de Operaciones:** El reclamo de las navieras está plenamente fundamentado: casi 6 de cada 10 horas que el buque pasa en Puerto Sur corresponden a esperas improductivas (en rada o esperando grúas), y 1 de cada 3 buques sufre demoras que tornan inviable la escala.
+
+![Figura 2: Desglose de Estadía Portuaria](plots/fig2_desglose_estadia.png)
 
 ---
 
@@ -201,25 +146,20 @@ Se evaluó el barrido de demanda diaria y la incorporación de una 4ª grúa pó
 
 | Demanda Diaria (buques/día) | Estadía Actual 3 Grúas ($W$) | % Escalas > 16h (3 Grúas) | Estadía con 4ª Grúa ($W$) | % Escalas > 16h (4 Grúas) |
 | :---: | :---: | :---: | :---: | :---: |
-| $4.04$ (Factor 0.5) | $8.02$ h | $1.5\%$ | $7.42$ h | $0.7\%$ |
-| $4.85$ (Factor 0.6) | $8.84$ h | $4.7\%$ | $8.04$ h | $2.5\%$ |
-| $5.66$ (Factor 0.7) | $9.99$ h | $10.4\%$ | $8.84$ h | $5.8\%$ |
-| $6.47$ (Factor 0.8) | $11.60$ h | $18.9\%$ | $9.98$ h | $10.8\%$ |
-| $7.28$ (Factor 0.9) | $15.04$ h | $37.0\%$ | $11.93$ h | $21.4\%$ |
-| **$8.09$ (Demanda Actual)** | **$24.25$ h** | **$58.1\%$** | **$16.46$ h** | **$37.2\%$** |
-
-```
-Punto de Quiebre Operativo (W <= 16h):
-* Con 3 Grúas (Actual): Demanda máxima soportable = ~7.40 buques/día (~1.140 contenedores/día).
-* Con 4 Grúas (Mejora): Demanda máxima soportable = ~8.09 buques/día (~1.250 contenedores/día).
-```
+| $4.04$ (Factor 0.5) | $6.52$ h | $0.3\%$ | $5.70$ h | $0.3\%$ |
+| $4.85$ (Factor 0.6) | $7.23$ h | $2.6\%$ | $6.11$ h | $0.7\%$ |
+| $5.66$ (Factor 0.7) | $8.17$ h | $5.9\%$ | $6.66$ h | $1.6\%$ |
+| $6.47$ (Factor 0.8) | $9.36$ h | $11.2\%$ | $7.38$ h | $4.2\%$ |
+| $7.28$ (Factor 0.9) | $11.17$ h | $19.3\%$ | $8.22$ h | $7.6\%$ |
+| **$8.09$ (Demanda Actual)** | **$15.00$ h** | **$32.9\%$** | **$9.38$ h** | **$11.8\%$** |
 
 **Beneficio de la 4ª Grúa:**
-* Reduce la estadía total de $24.25$ h a **$16.46$ horas** (reducción del **32.1%**).
-* La espera en rada $W_q$ se desploma de $16.32$ h a **$9.06$ horas** (ahorro neto de **$7.26$ horas por buque**).
-* **Mejoras adicionales recomendadas:** 
-  1. Habilitar la 2ª grúa nocturna en estado activo continuo (eliminando el tiempo de espera de alistamiento de 15–20 min).
-  2. Ajustar los relevos de guardia mediante relevo en caliente (*hot-seat changeover*) para eliminar la detención de 10–15 min.
+* Reduce la estadía total de $15.00$ h a **$9.38$ horas** (reducción del **37.5%**).
+* La espera en rada se contrae de $7.90$ h a **$3.26$ horas** (ahorro neto de **$4.64$ horas de rada por buque**).
+* El porcentaje de escalas que exceden las 16h cae de **$32.91\%$ a tan solo $11.85\%$**.
+* **Capacidad Máxima Admisible:** Con 3 grúas la demanda límite para que el promedio no supere 16h es de ~8.09 b/d (pero con alta volatilidad y 33% de incumplimiento). Con 4 grúas, la terminal puede absorber más de 9.5 b/d con estadías inferiores a 16h.
+
+![Figura 1: Capacidad Operativa vs Demanda Diaria](plots/fig1_capacidad_demanda.png)
 
 ---
 
@@ -237,14 +177,14 @@ Punto de Quiebre Operativo (W <= 16h):
 ### Consigna e) Temporada de Cruceros y Reserva Exclusiva de Berma
 * **Impacto Operativo:**
   * Cada crucero ocupa una berma completa entre 28 y 36 horas (media: 32 h) sin requerir grúas STS. Durante la temporada de 3 meses arriban 2 cruceros semanales (24 escalas en total).
-  * Si se concede la **reserva exclusiva de berma**, la capacidad de atraque para buques de carga se reduce transitoriamente de 3 a 2 bermas durante las ventanas matutinas.
-  * La estadía de los buques feeder salta de $27.85$ h a **$40.73$ horas** (incremento de **$+12.88$ horas por buque de carga** durante la temporada).
+  * Si se concede la **reserva exclusiva preventiva de berma**, la capacidad de atraque para buques de carga se reduce transitoriamente de 3 a 2 bermas durante las ventanas matutinas.
+  * La estadía de los buques feeder salta de $15.76$ h a **$18.07$ horas** (incremento de **$+2.31$ horas por buque de carga** durante la temporada).
 * **Análisis Económico:**
-  * Demora total adicional transferida a la flota comercial: **$38.012$ horas de buque detenido**.
+  * Demora total adicional transferida a la flota comercial: **$6.820$ horas de buque detenido/año**.
   * Valuando la inmovilización de buque entre USD 15.000 y USD 30.000 / día (USD 625 a USD 1.250 / hora):
-    $$\text{Costo de inmovilización generado} = \text{USD } 23.757.490 \text{ a USD } 47.514.980 \text{ por temporada}$$
-  * El ingreso ofrecido por la empresa de turismo es de USD 60.000 por escala ($\text{USD } 1.440.000$ en total).
-  * **Canon mínimo de equilibrio:** Para compensar las pérdidas de la carga, el crucero debería pagar entre **USD 989.895 y USD 1.979.791 por escala**.
+    $$\text{Costo de inmovilización generado} = \text{USD } 4.262.236 \text{ a USD } 8.524.473 \text{ por temporada}$$
+  * El ingreso ofrecido por la empresa de turismo es de USD 60.000 por escala ($\text{USD } 1.440.000$ en total por las 24 escalas).
+  * **Canon mínimo de equilibrio:** Para compensar las pérdidas de la carga, el crucero debería pagar entre **USD 177.593 y USD 355.186 por escala** (3 a 6 veces lo ofrecido).
 * **Recomendación Estratégica:**
   1. **Rechazar terminantemente la reserva exclusiva de berma**. Aceptar cruceros únicamente bajo modalidad de *atraque condicional a disponibilidad de muelle*.
   2. **Tratamiento estadístico:** Las escalas de cruceros **deben reportarse estrictamente por separado** de las estadísticas informadas a las navieras de carga. La permanencia de 32h de un crucero obedece a razones turísticas de los pasajeros en tierra; promediarla con la carga distorsionaría el cumplimiento contractual y provocaría penalidades o la pérdida de clientes feeder.
@@ -256,7 +196,7 @@ El proyecto industrial contempla dos escenarios de incremento permanente de buqu
 * **Escenario Base:** $+35\%$ de demanda ($\lambda = 10.92$ buques/día).
 * **Escenario Optimista:** $+100\%$ de demanda ($\lambda = 16.17$ buques/día).
 
-La capacidad teórica máxima de 3 bermas es de aproximadamente $9.6$ buques/día. Por ende, **ante cualquiera de los dos escenarios del proyecto industrial, la infraestructura actual de 3 bermas entra en colapso permanente ($\rho > 1.13$)**, con colas que divergen a infinito. La 4ª berma incrementa la capacidad a $12.8$ buques/día, permitiendo operar holgadamente el Escenario Base.
+La capacidad teórica máxima de 3 bermas con grúas actuales es de aproximadamente $9.6$ buques/día. Por ende, **ante cualquiera de los dos escenarios del proyecto industrial, la infraestructura actual de 3 bermas entra en colapso permanente ($\rho > 1.13$)**, con colas que divergen a infinito. La 4ª berma incrementa la capacidad a $12.8$ buques/día, permitiendo operar holgadamente el Escenario Base.
 
 #### Matriz de Decisión bajo Incertidumbre (Beneficio Neto en USD Millones / año)
 Considerando las dos alternativas de inversión ($A_1$: Mantener 3 Bermas; $A_2$: Construir 4ª Berma con inversión anualizada de USD 1.2M/año):
@@ -264,13 +204,13 @@ Considerando las dos alternativas de inversión ($A_1$: Mantener 3 Bermas; $A_2$
 | Alternativa | Escenario 1: Tráfico Actual | Escenario 2: Base Ind. (+35%) | Escenario 3: Optimista (+100%) | Criterio Wald (Maximin) | Criterio Maximax (Optimista) | Hurwicz ($\alpha = 0.5$) | Laplace (Promedio) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **$A_1$: Mantener 3 Bermas** | USD $0$ M | -USD $500$ M *(Colapso)* | -USD $1.200$ M *(Colapso)* | -USD $1.200$ M | USD $0$ M | -USD $600$ M | -USD $567$ M |
-| **$A_2$: Construir 4ª Berma** | +USD $47.8$ M | +USD $350$ M | +USD $450$ M | **+USD $47.8$ M** | **+USD $450$ M** | **+USD $248.9$ M** | **+USD $282.6$ M** |
+| **$A_2$: Construir 4ª Berma** | +USD $19.5$ M | +USD $250$ M | +USD $380$ M | **+USD $19.5$ M** | **+USD $380$ M** | **+USD $199.8$ M** | **+USD $216.5$ M** |
 
 #### Matriz de Arrepentimiento (Savage Minimax Regret):
-* Si no se construye ($A_1$) y se da el Escenario Base: Regret = USD $850$ M.
+* Si no se construye ($A_1$) y se da el Escenario Base: Regret = USD $750$ M.
 * Si se construye ($A_2$): Regret máximo = **USD $0$ M** (la alternativa $A_2$ es estrictamente dominante en todos los escenarios).
 
-> **Discusión sobre la convicción del directorio:** Bajo los criterios formales bajo incertidumbre pura (Wald, Savage, Laplace), **la convicción del directorio no es metodológicamente relevante** porque no se cuenta con probabilidades asignadas. No obstante, dado que $A_2$ (Construir la 4ª berma) domina de forma absoluta en todos los escenarios, la convicción de la gerencia sobre la materialización del escenario base no hace más que reforzar una decisión que ya era óptima en condiciones de máxima aversión al riesgo.
+> **Discusión sobre la convicción del directorio:** Bajo los criterios formales bajo incertidumbre pura (Wald, Savage, Laplace), **la convicción del directorio no es metodológicamente relevante** porque no se cuenta con probabilidades asignadas. No obstante, dado que $A_2$ (Construir la 4ª berma) domina de forma absoluta en todos los escenarios, la convicción de la gerencia sobre la materialización del escenario base ratifica una decisión que ya era óptima bajo aversión al riesgo.
 
 ---
 
@@ -280,43 +220,41 @@ Considerando las dos alternativas de inversión ($A_1$: Mantener 3 Bermas; $A_2$
   * Vida útil estimada: **20 años** (depreciación lineal: USD 600.000/año).
   * Costo diario de buque feeder inmovilizado: **USD 15.000 a USD 30.000 / día** (media: USD 22.500/día).
 * **Métricas de Ahorro y Repago Operativo:**
-  * Tiempo de estadía evitado: de $27.85$ h a $10.14$ h $\rightarrow$ **$17.71$ horas ahorradas por escala**.
-  * Para los $2.951$ buques/año actuales: **$52.260$ horas-buque ahorradas/año**.
-  * **Tiempo de inmovilización evitado en años:** $\frac{52.260}{24 \times 365} =$ **$5.97$ años-buque evitados por año**.
+  * Tiempo de estadía evitado: de $15.76$ h a $8.26$ h $\rightarrow$ **$7.50$ horas ahorradas por escala**.
+  * Para los $2.951$ buques/año actuales: **$22.132$ horas-buque ahorradas/año**.
+  * **Tiempo de inmovilización evitado en años:** $\frac{22.132}{24 \times 365} =$ **$2.53$ años-buque evitados por año**.
   * **Ahorro económico anual:**
-    * Mínimo (USD 15k/día): **USD 32.66 Millones/año**.
-    * Medio (USD 22.5k/día): **USD 48.99 Millones/año**.
-    * Máximo (USD 30k/día): **USD 65.32 Millones/año**.
+    * Mínimo (USD 15k/día): **USD 13.84 Millones/año**.
+    * Medio (USD 22.5k/día): **USD 20.76 Millones/año**.
+    * Máximo (USD 30k/día): **USD 27.68 Millones/año**.
   * **Período de Repago Simple (Payback Period):**
-    $$\text{Payback} = \frac{\text{USD } 12.000.000}{\text{USD } 48.990.000/\text{año}} = \mathbf{0.24 \text{ años}} \quad (\approx \mathbf{2.9 \text{ meses}})$$
-  * Rango de repago: entre **$2.2$ meses** (costo máx.) y **$4.4$ meses** (costo mín.).
+    $$\text{Payback} = \frac{\text{USD } 12.000.000}{\text{USD } 20.760.000/\text{año}} = \mathbf{0.58 \text{ años}} \quad (\approx \mathbf{6.9 \text{ meses}})$$
+  * Rango de repago: entre **$5.2$ meses** (costo máx.) y **$10.4$ meses** (costo mín.).
 
-```
-Impacto de Cruceros y Proyecto Industrial en la Decisión:
-1. Con Temporada de Cruceros: La 4ª berma permite absorber los cruceros sin degradar la operación de carga, monetizando USD 1.44M/año adicionales y acelerando el repago a menos de 2.5 meses.
-2. Con Proyecto Industrial (+35%): El ahorro anual supera los USD 300M al evitar el colapso portuario, repagando la obra en semanas.
-```
+![Figura 3: Repago de la 4ª Berma](plots/fig3_repago_berma.png)
 
 ---
 
 ## Sección 5: Test Estadístico de Tukey HSD (Validación al 95%)
 
-Se aplicó el **Test de Comparaciones Múltiples de Tukey (HSD)** con corrección de error familiar ($\text{FWER} = 0.05$) sobre muestras de $1.500$ escalas simuladas por configuración:
+Se aplicó el **Test de Comparaciones Múltiples de Tukey (HSD)** con corrección de error familiar ($\text{FWER} = 0.05$):
 
 | Par Comparado | Diferencia de Medias (Horas) | $p$-valor ajustado | Intervalo Confianza 95% (Inf - Sup) | ¿Rechaza $H_0$ ($\mu_1 = \mu_2$)? | Conclusión Práctica |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **Actual (3G) vs. 4 Grúas (4G)** | **-8.30 h** | **$0.000$** | **[-9.72 h, -6.88 h]** | **Sí (Significativo)** | La 4ª grúa genera una reducción masiva y estadísticamente probada de la estadía. |
-| **Actual (3G) vs. Crucero Exclusivo** | **+24.08 h** | **$0.000$** | **[+22.66 h, +25.50 h]** | **Sí (Significativo)** | La reserva de crucero deteriora catastróficamente la estadía de la carga. |
-| **Actual (3G) vs. Camión Penalizado** | **-1.05 h** | **$0.228$** | **[-2.47 h, +0.37 h]** | **No** | El control de patio ayuda en picos de congestión, pero por sí solo no suple la falta de grúas en muelle. |
-| **4 Grúas vs. Crucero Exclusivo** | **+32.38 h** | **$0.000$** | **[+30.96 h, +33.79 h]** | **Sí (Significativo)** | La pérdida por bloquear una berma anula por completo la ganancia de una grúa extra. |
+| **Actual (3G) vs. 4 Grúas (4G)** | **-4.33 h** | **$0.000$** | **[-5.11 h, -3.55 h]** | **Sí (Significativo)** | La 4ª grúa genera una reducción masiva y estadísticamente probada de la estadía. |
+| **Actual (3G) vs. Crucero Exclusivo** | **+5.15 h** | **$0.000$** | **[+4.37 h, +5.93 h]** | **Sí (Significativo)** | La reserva exclusiva de crucero deteriora significativamente la estadía de la carga. |
+| **Actual (3G) vs. Camión Penalizado** | **+0.34 h** | **$0.677$** | **[-0.44 h, +1.12 h]** | **No** | El control de patio ayuda en picos de congestión, pero por sí solo no suple la falta de grúas en muelle. |
+| **4 Grúas vs. Crucero Exclusivo** | **+9.48 h** | **$0.000$** | **[+8.70 h, +10.26 h]** | **Sí (Significativo)** | La pérdida por bloquear una berma anula por completo la ganancia de una grúa extra. |
+
+![Figura 4: Test de Tukey HSD](plots/fig4_tukey_hsd.png)
 
 ---
 
 ## Sección 6: Conclusiones Finales y Plan de Acción Sugerido
 
-1. **Aprobar inmediatamente la incorporación de la 4ª grúa pórtico STS:** Es la única medida de corto plazo capaz de bajar la estadía de $24.25$ h a $16.46$ h y estabilizar el nivel de servicio para retener a las navieras.
-2. **Proceder con la inversión de la 4ª Berma (USD 12M):** Con un período de repago de apenas **2.9 meses** gracias a los **5.97 años-buque de inmovilización evitados al año**, es un proyecto con rentabilidad económica fuera de serie, imprescindible para absorber el proyecto industrial.
-3. **Rechazar la reserva exclusiva para cruceros:** Genera sobrecostos de inmovilización de hasta USD 47.5M anuales que el canon de USD 60k no compensa. Ofrecer servicio de crucero únicamente sujeto a disponibilidad de berma o diferir la exclusividad hasta que la 4ª berma esté inaugurada.
+1. **Aprobar inmediatamente la incorporación de la 4ª grúa pórtico STS:** Es la única medida de corto plazo capaz de bajar la estadía de $15.00$ h a $9.38$ h y reducir el incumplimiento de $32.91\%$ a $11.85\%$, reteniendo a las navieras.
+2. **Proceder con la inversión de la 4ª Berma (USD 12M):** Con un período de repago de apenas **7 meses** gracias a los **2.53 años-buque de inmovilización evitados al año**, es un proyecto con rentabilidad económica sobresaliente, imprescindible para absorber el proyecto industrial.
+3. **Rechazar la reserva exclusiva para cruceros:** Genera sobrecostos de inmovilización de hasta USD 8.5M por temporada que el canon de USD 60k no compensa. Ofrecer servicio de crucero únicamente sujeto a disponibilidad de berma o diferir la exclusividad hasta que la 4ª berma esté inaugurada.
 4. **Optimizar turnos de estiba y patio:** Eliminar las paradas de guardia de 15 min mediante relevo en caliente y mantener la 2ª grúa nocturna operativa continua sin demora de alistamiento.
 
 ---
@@ -327,8 +265,8 @@ Se aplicó el **Test de Comparaciones Múltiples de Tukey (HSD)** con correcció
 | :--- | :---: | :--- |
 | **Python** | 3.12 | Lenguaje de programación base para el modelado algorítmico y ejecución de réplicas. |
 | **SimPy** | 4.1.2 | Framework de simulación de eventos discretos para coordinar colas, procesos estocásticos y recursos. |
-| **Pandas** | 2.2+ | Ingesta de las 8.852 escalas del Grupo 8, vectorización de métricas de estadía y exportación tabular. |
-| **NumPy** | 1.26+ | Generación de variables pseudoaleatorias, cálculo de percentiles y tratamiento matricial. |
-| **SciPy** | 1.13+ | Ajuste de funciones de densidad empíricas y resolución analítica de las fórmulas de Erlang C y Allen-Cunneen. |
+| **Pandas** | 2.2+ | Ingesta de las 8.852 escalas del Grupo 8, agregación temporal y exportación tabular. |
+| **NumPy** | 1.26+ | Tratamiento matricial y generación estocástica pseudoaleatoria. |
+| **SciPy** | 1.13+ | Ajuste de distribuciones y cálculo analítico de Erlang C y Allen-Cunneen. |
 | **Statsmodels** | 0.14+ | Implementación del test de comparaciones múltiples de Tukey HSD y ANOVA para validación estadística. |
-| **Matplotlib** | 3.8+ | Renderizado de figuras de alta resolución a 300 DPI (`fig1` a `fig4`) integradas en el informe. |
+| **Matplotlib** | 3.8+ | Renderizado de figuras de alta resolución a 300 DPI integradas en el informe. |

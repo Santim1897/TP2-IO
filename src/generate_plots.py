@@ -40,8 +40,8 @@ l_umbral = ax1.axhline(16.0, color='darkred', linestyle='--', linewidth=2, label
 
 # Barras de % buques excedidos
 width = 0.12
-b1 = ax2.bar(df_cap['buques_dia'] - width/2, df_cap['Pct_excede_3gruas'], width=width, color='#d9534f', alpha=0.25, label='% Excede 16h (3 Grúas)')
-b2 = ax2.bar(df_cap['buques_dia'] + width/2, df_cap['Pct_excede_4gruas'], width=width, color='#0275d8', alpha=0.25, label='% Excede 16h (4 Grúas)')
+b1 = ax2.bar(df_cap['buques_dia'] - width/2, df_cap['pct16_3gruas'], width=width, color='#d9534f', alpha=0.25, label='% Excede 16h (3 Grúas)')
+b2 = ax2.bar(df_cap['buques_dia'] + width/2, df_cap['pct16_4gruas'], width=width, color='#0275d8', alpha=0.25, label='% Excede 16h (4 Grúas)')
 
 ax1.set_xlabel('Demanda Diaria de Buques (buques/día)', fontweight='bold')
 ax1.set_ylabel('Estadía Promedio en Puerto (Horas)', fontweight='bold')
@@ -101,7 +101,7 @@ fig, ax1 = plt.subplots(figsize=(8.5, 5), dpi=300)
 
 costos = [15000, 20000, 22500, 25000, 30000]
 paybacks_meses = [
-    (12.0 / (5.97 * (c * 365 / 1e6))) * 12.0 for c in costos
+    (12.0 / (2.53 * (c * 365 / 1e6))) * 12.0 for c in costos
 ]
 
 l_pb = ax1.plot(costos, paybacks_meses, 'o-', color='#0275d8', linewidth=2.5, markersize=8, label='Período de Repago (Meses)')

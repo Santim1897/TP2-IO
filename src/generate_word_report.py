@@ -7,6 +7,7 @@ Genera:
 
 import os
 import sys
+from pathlib import Path
 import docx
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -82,7 +83,7 @@ def add_figure_with_caption(doc, image_path, caption_text, width_inches=6.0):
 # =========================================================================
 # GENERADOR 1: MODELO CONCEPTUAL ESPECÍFICO (BUZÓN DE ENTREGA)
 # =========================================================================
-def build_conceptual_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/MODELO_CONCEPTUAL_G08.docx"):
+def build_conceptual_word_doc(output_path="MODELO_CONCEPTUAL_G08.docx"):
     doc = docx.Document()
     for sec in doc.sections:
         sec.top_margin = Inches(1.0)
@@ -118,12 +119,11 @@ def build_conceptual_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scr
     r_sub.font.size = Pt(11)
     r_sub.font.color.rgb = COLOR_SECONDARY
 
-    # Tabla de Metadatos
     t_meta = doc.add_table(rows=6, cols=2)
     meta_info = [
         ("Materia:", "11.51 / IO51 - Investigación Operativa (ITBA)"),
         ("Comisión y Grupo:", "2° Cuatrimestre 2026 — Grupo 08"),
-        ("Dataset Asignado:", "PuertoSur_escalas_G08.csv (8.852 escalas históricas registradas)"),
+        ("Dataset Asignado:", "data/PuertoSur_escalas_G08.csv (8.852 escalas históricas registradas)"),
         ("Metodología:", "Simulación de Eventos Discretos (DES) & Modelado IDEF0"),
         ("Repositorio Oficial:", "https://github.com/Santim1897/TP2-IO"),
         ("Entregable:", "Buzón de Entrega: Modelo Conceptual (Puntos i a vii)")
@@ -143,7 +143,7 @@ def build_conceptual_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scr
     doc.add_paragraph("La Terminal Portuaria Puerto Sur opera como el principal nodo logístico de contenedores de la región patagónica en competencia directa con el puerto de la ciudad capital. El objetivo del sistema real es asegurar el cumplimiento del compromiso contractual de estadía promedio menor o igual a 16 horas (W <= 16 h) con las navieras de servicios regulares (Austral Feeder, Andes Container Line y TransPatagonia Line), a fin de evitar el desvío de buques, maximizar la productividad de transferencia de carga y optimizar la capacidad de sus activos de muelle y patio.")
     
     doc.add_paragraph("1.2. Objetivo del Estudio de Simulación (Perspectiva Metodológica):").runs[0].bold = True
-    doc.add_paragraph("Modelar conceptual y computacionalmente el comportamiento estocástico y dinámico del puerto mediante Simulación de Eventos Discretos (DES), cuantificando los tiempos de espera en rada (Wq), maniobras náuticas y faena en berma (Ws); contrastar la operación actual con modelos teóricos de líneas de espera (M/M/c y M/G/c); identificar los cuellos de botella en muelle y patio; y sustentar con evidencia estadística la toma de decisiones estratégicas (adición de una 4ª grúa pórtico STS, políticas de patio y camiones, incorporación de temporada de cruceros y viabilidad de una 4ª berma).")
+    doc.add_paragraph("Modelar conceptual y computacionalmente el comportamiento estocástico y dinámico del puerto mediante Simulación de Eventos Discretos (DES), cuantificando los tiempos de espera en rada (Wq), maniobras náuticas conjuntas (U(1, 2) h en total), espera de grúas amarrado y faena efectiva en berma; contrastar la operación actual con modelos teóricos de líneas de espera (M/M/c y M/G/c); identificar los cuellos de botella en muelle y patio; y sustentar con evidencia estadística la toma de decisiones estratégicas (adición de una 4ª grúa pórtico STS, políticas de patio y camiones, incorporación de temporada de cruceros y viabilidad de una 4ª berma).")
 
     # 2. Variables
     h1 = doc.add_heading(level=1)
@@ -155,7 +155,7 @@ def build_conceptual_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scr
     doc.add_paragraph("  - Política de grúas: Asignación de hasta 2 grúas por buque según disponibilidad.")
     doc.add_paragraph("  - Régimen nocturno: Grúa en standby con 15-20 min de alistamiento vs. activa continua.")
     doc.add_paragraph("  - Política de camiones externos: Tolerancia horaria vs. multas por impuntualidad.")
-    doc.add_paragraph("  - Política de crucero: Rechazar, aceptar sin reserva, o conceder reserva exclusiva de berma.")
+    doc.add_paragraph("  - Política de crucero: Rechazar, aceptar sin reserva, o conceder reserva exclusiva preventiva.")
     doc.add_paragraph("  - Inversión en 4ª berma: Adquisición e instalación de 4ª berma (USD 12M).")
 
     doc.add_paragraph("• Variables de Referencia / Exógenas (No Controlables / Estocásticas):").runs[0].bold = True
@@ -163,7 +163,7 @@ def build_conceptual_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scr
     doc.add_paragraph("  - Composición de carga: Movimientos Dry, Reefer y OOG por buque.")
     doc.add_paragraph("  - Productividad nominal de grúa: Dry (28 mov/h), Reefer (21 mov/h), OOG (12 mov/h).")
     doc.add_paragraph("  - Factor de interferencia dual: 0.85 de la suma si operan 2 grúas en un buque (factor 1.7x).")
-    doc.add_paragraph("  - Tiempos de maniobra de práctico y remolque: U(1.0, 2.0) horas al entrar y al salir.")
+    doc.add_paragraph("  - Maniobras conjuntas de atraque y desatraque: U(1.0, 2.0) horas en conjunto en total (media 1.5 h).")
     doc.add_paragraph("  - Ciclo de turnos: Paradas de 10-15 min cada 8h (00, 08 y 16 h). Reducción nocturna a 1 activa + 1 standby.")
     doc.add_paragraph("  - Patio: Capacidad de 3.000 slots, tiempo de permanencia medio de 72 h, 20-30% camiones tardíos.")
     doc.add_paragraph("  - Escalas de crucero: 2 arribos/semana durante 3 meses, permanencia de 28 a 36 h.")
@@ -172,7 +172,9 @@ def build_conceptual_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scr
     doc.add_paragraph("• Variables de Salida / Desempeño (KPIs):").runs[0].bold = True
     doc.add_paragraph("  - W: Estadía promedio total (fondeo + atraque + faena + desatraque). Meta: W <= 16 h.")
     doc.add_paragraph("  - Wq: Tiempo medio de espera en rada. Ws: Tiempo medio en berma.")
-    doc.add_paragraph("  - % Espera: Proporción (Wq / W) * 100%.")
+    doc.add_paragraph("  - T_esp_grua: Tiempo amarrado esperando grúa STS libre.")
+    doc.add_paragraph("  - T_op_grua: Tiempo neto de transferencia efectiva de carga con grúas.")
+    doc.add_paragraph("  - % Espera Inactiva: Proporción ((Wq + T_esp_grua) / W) * 100%.")
     doc.add_paragraph("  - L, Lq: Cantidad promedio de buques en el puerto y fondeados en rada.")
     doc.add_paragraph("  - NS_16: Porcentaje de buques despachados con estadía <= 16 horas.")
     doc.add_paragraph("  - Payback y Años-buque de inmovilización evitados al año.")
@@ -180,62 +182,34 @@ def build_conceptual_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scr
     # 3. Plan de Análisis
     h1 = doc.add_heading(level=1)
     h1.add_run("3. Plan de Análisis y Visualización de Resultados").font.color.rgb = COLOR_PRIMARY
-    doc.add_paragraph("Se estructuró una matriz de experimentación factorial multiescenario: 1) Diagnóstico de línea base; 2) Barrido de demanda diaria de buques (0.5x a 1.2x) para determinar la capacidad límite bajo 3 vs. 4 grúas; 3) Políticas de ventanas de camiones y zonificación reefer; 4) Impacto de temporada de cruceros con y sin exclusividad; 5) Escenarios del proyecto industrial (+35% y +100%) bajo criterios de decisión bajo incertidumbre (Wald, Savage, Hurwicz, Laplace); 6) Análisis de repago de la 4ª berma.")
-    doc.add_paragraph("El protocolo estadístico incluye eliminación del período de calentamiento (100 escalas), réplicas independientes, ANOVA y Test de Comparaciones Múltiples de Tukey HSD (FWER = 0.05).")
+    doc.add_paragraph("Se estructuró una matriz de experimentación factorial multiescenario: 1) Diagnóstico de línea base física; 2) Barrido de demanda diaria de buques (0.5x a 1.2x) para determinar la capacidad límite bajo 3 vs. 4 grúas; 3) Políticas de ventanas de camiones y zonificación reefer; 4) Impacto de temporada de cruceros con y sin exclusividad; 5) Escenarios del proyecto industrial (+35% y +100%) bajo criterios de decisión bajo incertidumbre (Wald, Savage, Hurwicz, Laplace); 6) Análisis de repago de la 4ª berma.")
+    doc.add_paragraph("El protocolo estadístico incluye eliminación del período de calentamiento, réplicas independientes, ANOVA y Test de Comparaciones Múltiples de Tukey HSD (FWER = 0.05).")
 
     # 4. Relación entre Variables
     h1 = doc.add_heading(level=1)
     h1.add_run("4. Relación entre Variables (Diagrama Causal de Influencias)").font.color.rgb = COLOR_PRIMARY
-    doc.add_paragraph("El funcionamiento del puerto responde a un complejo entramado de influencias causales. A continuación se presenta el Diagrama de Relación entre Variables generado formalmente:")
-    
     add_figure_with_caption(doc, "plots/fig_relacion_variables_causal.png", 
                             "Figura 1: Diagrama de Influencias Causales entre Variables de Decisión, Exógenas, Estado y KPIs", width_inches=6.2)
-
-    doc.add_paragraph("Mecanismos y bucles clave:")
-    doc.add_paragraph("• Bucle de Muelle: Los arribos incrementan la cola en rada Lq. Las grúas determinan Ws. La 4ª grúa reduce Ws, liberando antes la berma y contrayendo Wq.")
-    doc.add_paragraph("• Bucle de Patio: La descarga ingresa al patio. Si los camiones se atrasan, el patio supera el 75% (>2.250 slots), obligando a las grúas STS a esperar slots libres, alargando Ws y colapsando la rada.")
-    doc.add_paragraph("• Bucle Nocturno: De 00:00 a 08:00 la dotación se reduce a 1 grúa (+1 standby), ralentizando la operación y acumulando buques para la mañana.")
 
     # 5. Diagrama IDEF0
     h1 = doc.add_heading(level=1)
     h1.add_run("5. Diagramas IDEF0").font.color.rgb = COLOR_PRIMARY
-    doc.add_paragraph("La formalización de los procesos se llevó a cabo bajo el estándar IDEF0:")
-    
-    doc.add_paragraph("5.1. Diagrama de Contexto A-0:").runs[0].bold = True
     add_figure_with_caption(doc, "plots/fig_idef0_a_menos_0.png",
                             "Figura 2: Diagrama de Contexto IDEF0 A-0: Operar Terminal Portuaria Puerto Sur", width_inches=6.2)
-
-    doc.add_paragraph("5.2. Descomposición de Primer Nivel A0:").runs[0].bold = True
     add_figure_with_caption(doc, "plots/fig_idef0_a0_descomposicion.png",
                             "Figura 3: Diagrama de Descomposición Funcional IDEF0 A0 (Actividades A1 a A4)", width_inches=6.2)
 
     # 6. Lógicas
     h1 = doc.add_heading(level=1)
     h1.add_run("6. Lógicas Operativas del Sistema").font.color.rgb = COLOR_PRIMARY
-    doc.add_paragraph("El flujo de eventos y las decisiones operativas se sintetizan en el siguiente Diagrama de Flujo Lógico:")
-    
     add_figure_with_caption(doc, "plots/fig_logica_flujo_buque.png",
                             "Figura 4: Diagrama de Flujo Lógico del Ciclo de Atención de Escalas Portuarias", width_inches=5.8)
-
-    doc.add_paragraph("Lógicas fundamentales modeladas:")
-    doc.add_paragraph("1. Lógica de Rada: Asignación por disponibilidad si Bermas_Ocupadas < B y no hay berma reservada para crucero. Cola FIFO.")
-    doc.add_paragraph("2. Lógica de Atraque/Desatraque: 1 a 2 horas cada una. Berma ocupada pero grúas inactivas.")
-    doc.add_paragraph("3. Lógica de Grúas: Asigna hasta 2 grúas. Productividad combinada al 85% (factor 1.7x). En turno nocturno: 1 activa + 1 standby con 15-20 min de alistamiento. Pausa de 10-15 min en cada cambio de guardia.")
-    doc.add_paragraph("4. Lógica de Patio: Si slots ocupados > 2.250 (>75%), se aplica factor de demora de 25% extra por falta de slots.")
-    doc.add_paragraph("5. Lógica de Cruceros: Ocupa berma 28 a 36 h sin grúas. Con reserva exclusiva, veda una berma comercial a buques de carga.")
 
     # 7. Elementos del Simulador
     h1 = doc.add_heading(level=1)
     h1.add_run("7. Elementos del Simulador (Arquitectura SimPy)").font.color.rgb = COLOR_PRIMARY
-    doc.add_paragraph("A continuación se presenta el diagrama de arquitectura y componentes del simulador SimPy:")
-    
     add_figure_with_caption(doc, "plots/fig_elementos_simulador.png",
                             "Figura 5: Diagrama de Arquitectura de Clases, Recursos y Monitores del Simulador SimPy", width_inches=6.2)
-
-    doc.add_paragraph("Desglose de Componentes SimPy:")
-    doc.add_paragraph("• Entidades (Processes): Proceso buque feeder, proceso crucero, proceso de turnos de guardia y proceso de camiones externos.")
-    doc.add_paragraph("• Recursos SimPy: bermas = simpy.Resource(env, capacity=B), gruas_sts = simpy.PriorityResource, patio = simpy.Container(env, capacity=3000).")
-    doc.add_paragraph("• Monitor Estadístico: Registro de eventos en microsegundos, vectorización de estadías W, Wq, Ws y verificación de la Ley de Little (L = lambda * W).")
 
     doc.save(output_path)
     print(f"Documento de Modelo Conceptual guardado exitosamente en: {output_path}")
@@ -243,7 +217,7 @@ def build_conceptual_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scr
 # =========================================================================
 # GENERADOR 2: INFORME EJECUTIVO COMPLETO
 # =========================================================================
-def build_full_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/INFORME_EJECUTIVO_PUERTO_SUR.docx"):
+def build_full_word_doc(output_path="INFORME_EJECUTIVO_PUERTO_SUR.docx"):
     doc = docx.Document()
     for sec in doc.sections:
         sec.top_margin = Inches(1.0)
@@ -283,7 +257,7 @@ def build_full_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scratch/T
     meta_info = [
         ("Materia:", "11.51 / IO51 - Investigación Operativa (ITBA)"),
         ("Comisión y Grupo:", "2° Cuatrimestre 2026 — Grupo 08"),
-        ("Dataset Asignado:", "PuertoSur_escalas_G08.csv (8.852 escalas registradas, ~3 años)"),
+        ("Dataset Asignado:", "data/PuertoSur_escalas_G08.csv (8.852 escalas registradas, ~3 años)"),
         ("Entorno y Lenguaje:", "Python 3.12 / SimPy 4.1.2 / Pandas / SciPy / Statsmodels / Matplotlib"),
         ("Repositorio Oficial:", "https://github.com/Santim1897/TP2-IO"),
         ("Naturaleza del Documento:", "Informe Técnico y Gerencial Autocontenido")
@@ -298,18 +272,18 @@ def build_full_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scratch/T
     # Resumen Ejecutivo
     h1 = doc.add_heading(level=1)
     h1.add_run("Resumen Ejecutivo y Cuadro Consolidado de Respuestas").font.color.rgb = COLOR_PRIMARY
-    doc.add_paragraph("A continuación se presenta la tabla consolidada con las respuestas cuantitativas y recomendaciones estratégicas a cada una de las consignas requeridas por la cátedra para el Grupo 08:")
+    doc.add_paragraph("A continuación se presenta la tabla consolidada con las respuestas cuantitativas y recomendaciones estratégicas a cada una de las consignas requeridas por la cátedra para el Grupo 08 (Simulación Física Refactorizada):")
 
     t_res = doc.add_table(rows=8, cols=4)
     res_data = [
         ["Consigna", "Pregunta Clave de la Cátedra", "Resultado Cuantitativo (Grupo 8)", "Recomendación Estratégica"],
-        ["a) Modelo", "Formalización conceptual y operativa del puerto.", "Simulador SimPy verificado formalmente mediante Ley de Little (L = lambda * W).", "Arquitectura modular y reproducible."],
-        ["b) Diagnóstico", "Estadía actual (W), cantidad de buques (L) y desglose espera vs atención.", "W = 24.25 h | L = 8.15 buques | Wq = 16.32 h (67.3%) | Ws = 7.92 h (32.7%). 58.1% excede 16h.", "Reclamo naviero plenamente fundado: 2 de cada 3 horas son espera en rada."],
-        ["c) Umbral 16h", "Demanda máx. admisible y beneficio de incorporar una 4ª grúa STS.", "Demanda máx actual: <= 7.4 b/d. Con 4ª grúa: W cae a 16.46 h (espera en rada se reduce en 44.5%).", "Aprobar de inmediato la 4ª grúa. Permite atender la demanda actual (8.09 b/d)."],
-        ["d) Patio", "Efecto de ventanas horarias de camiones y slots reefer segregados.", "Penalidades bajan camiones tardíos del 25% al 10%, evitando superar el 75% del patio.", "Aplicar penalidad y segregar slots reefer en temporada de fruta (+57% demanda)."],
-        ["e) Cruceros", "Impacto de exclusividad de berma y canon mínimo (USD 60.000 ofrecidos).", "Reserva exclusiva genera +12.88 h/buque de demora a carga (pérdidas de USD 23.8M a 47.5M).", "Rechazar reserva exclusiva. Canon de equilibrio: USD 990k - 1.98M por escala. Reportar por separado."],
+        ["a) Modelo", "Formalización conceptual y operativa del puerto.", "Simulador SimPy con contención física de grúas, maniobras conjuntas de 1.5h y dinámica de patio.", "Verificación formal mediante Ley de Little (L = lambda * W)."],
+        ["b) Diagnóstico", "Estadía actual (W), cantidad de buques (L) y desglose espera vs atención.", "W = 15.00 h | L = 5.05 buques | Wq = 7.90 h (52.6%) | Ws = 7.11 h (47.4%). Atención neta grúa: 4.75 h (31.7%). 32.9% excede 16h.", "Reclamo naviero plenamente fundado: 58.3% del tiempo es espera inactiva."],
+        ["c) Umbral 16h", "Demanda máx. admisible y beneficio de incorporar una 4ª grúa STS.", "Demanda máx actual: <= 8.09 b/d (32.9% excedido). Con 4ª grúa: W cae a 9.38 h (Wq cae 58.7% a 3.26 h; excedidos caen a 11.8%).", "Aprobar de inmediato la 4ª grúa. Brinda holgura operativa y robustez."],
+        ["d) Patio", "Efecto de ventanas horarias de camiones y slots reefer segregados.", "Penalidades bajan camiones tardíos del 25% al 10%, estabilizando el patio por debajo del 75%.", "Aplicar penalidad y segregar slots reefer en temporada de fruta (+57% demanda)."],
+        ["e) Cruceros", "Impacto de exclusividad de berma y canon mínimo (USD 60.000 ofrecidos).", "Reserva exclusiva genera +2.31 h/buque de demora a carga (pérdidas de USD 4.26M a 8.52M).", "Rechazar reserva exclusiva. Canon de equilibrio: USD 178k - 355k por escala. Reportar por separado."],
         ["f) Proyecto Ind.", "Decisión bajo incertidumbre ante Base (+35%) y Optimista (+100%).", "Con 3 bermas el puerto colapsa (rho > 1.13). 4ª berma domina bajo Wald, Savage y Laplace.", "Construir 4ª berma de manera urgente. Convicción directiva valida la decisión."],
-        ["g) Repago 4ª B.", "Demanda para repago, período de repago y buques-año evitados.", "Ahorro: 5.97 años-buque evitados/año (USD 49.0M/año). Inversión: USD 12M.", "Payback de 0.24 años (~3 meses). Rentabilidad económica sobresaliente."]
+        ["g) Repago 4ª B.", "Demanda para repago, período de repago y buques-año evitados.", "Ahorro: 2.53 años-buque evitados/año (USD 20.76M/año). Inversión: USD 12M.", "Payback de 0.58 años (~7 meses). Rentabilidad económica sobresaliente."]
     ]
     for r_idx, row in enumerate(res_data):
         for c_idx, val in enumerate(row):
@@ -325,11 +299,10 @@ def build_full_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scratch/T
     h2 = doc.add_heading(level=2)
     h2.add_run("1.1. Objetivo y Clasificación de Variables").font.color.rgb = COLOR_SECONDARY
     doc.add_paragraph("El objetivo general es estructurar un modelo DES para Puerto Sur que permita evaluar cuantitativamente la capacidad de sostener una estadía W <= 16 horas con las navieras regulares, identificar cuellos de botella en muelle y patio, y evaluar la viabilidad de la 4ª grúa, la 4ª berma y el impacto de los cruceros.")
-    doc.add_paragraph("Se clasificaron rigurosamente las variables de decisión (Bermas B in {2,3,4}, Grúas G in {3,4}, políticas de camiones y cruceros), variables de referencia exógenas (arribos Delta t del Grupo 8, mix de carga, turnos, paradas de cambio de guardia) y variables de salida/KPIs (W, Wq, Ws, % espera, L, Lq y Payback).")
+    doc.add_paragraph("Se clasificaron rigurosamente las variables de decisión (Bermas B in {2,3,4}, Grúas G in {3,4}, políticas de camiones y cruceros), variables de referencia exógenas (arribos Delta t del Grupo 8, mix de carga, turnos, maniobras conjuntas de 1.5h, paradas de cambio de guardia) y variables de salida/KPIs (W, Wq, Ws, T_esp_grua, T_op_grua, % espera inactiva, L, Lq y Payback).")
 
     h2 = doc.add_heading(level=2)
     h2.add_run("1.2. Relación Causal entre Variables").font.color.rgb = COLOR_SECONDARY
-    doc.add_paragraph("A continuación se presenta el Diagrama de Relación Causal entre Variables de Decisión, Exógenas, Estado y Salidas:")
     add_figure_with_caption(doc, "plots/fig_relacion_variables_causal.png",
                             "Figura 1: Diagrama de Influencias Causales entre Variables del Sistema Portuario", width_inches=6.0)
 
@@ -352,24 +325,23 @@ def build_full_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scratch/T
     # SECCIÓN 2: MODELO DE DATOS Y COLAS
     h1 = doc.add_heading(level=1)
     h1.add_run("Sección 2: Modelo de Datos y Teoría de Colas a Priori").font.color.rgb = COLOR_PRIMARY
-    doc.add_paragraph("Del análisis de las 8.852 escalas de PuertoSur_escalas_G08.csv se derivaron: lambda = 8.086 buques/día, tiempo entre arribos medio = 2.968 h (CV = 2.494), Austral Feeder (43.8%), Andes Container Line (37.6%), TransPatagonia Line (18.7%).")
+    doc.add_paragraph("Del análisis de las 8.852 escalas de data/PuertoSur_escalas_G08.csv se derivaron: lambda = 8.086 buques/día, tiempo entre arribos medio = 2.968 h (CV = 2.494), Austral Feeder (43.8%), Andes Container Line (37.6%), TransPatagonia Line (18.7%).")
     
-    t_q = doc.add_table(rows=7, cols=7)
+    t_q = doc.add_table(rows=6, cols=7)
     q_data = [
         ["Modelo Analítico", "Ws Supuesto", "Tasa mu", "Intensidad rho", "Wq (Rada)", "W (Estadía)", "L (Buques)"],
-        ["M/M/3 (Dual 2G)", "6.35 h", "0.1575", "0.713", "3.78 h", "10.13 h", "3.41"],
-        ["M/M/3 (Mixto)", "7.00 h", "0.1429", "0.786", "6.81 h", "13.81 h", "4.65"],
-        ["M/M/3 (Promedio)", "7.50 h", "0.1333", "0.842", "11.37 h", "18.87 h", "6.36"],
-        ["M/G/3 (Allen-Cunneen)", "7.00 h (CV=2.49)", "0.1429", "0.786", "21.50 h", "28.50 h", "9.60"],
-        ["M/G/3 (Allen-Cunneen)", "7.50 h (CV=2.49)", "0.1333", "0.842", "35.86 h", "43.36 h", "14.61"],
-        ["Simulación Real G08", "7.92 h (Empírico)", "Dinámico", "~0.81", "16.32 h", "24.25 h", "8.15"]
+        ["M/M/3 (Ideal 2G)", "5.50 h", "0.1818", "0.618", "1.76 h", "7.26 h", "2.45"],
+        ["M/M/3 (Mixto)", "6.50 h", "0.1538", "0.730", "4.34 h", "10.84 h", "3.65"],
+        ["M/M/3 (Promedio)", "7.11 h", "0.1406", "0.799", "7.85 h", "14.96 h", "5.04"],
+        ["M/G/3 (Allen-Cunneen)", "7.11 h (CV=2.49)", "0.1406", "0.799", "24.81 h", "31.92 h", "10.75"],
+        ["Simulación Física G08", "7.11 h (Empírico)", "Dinámico", "~0.79", "7.90 h", "15.00 h", "5.05"]
     ]
     for r_idx, row in enumerate(q_data):
         for c_idx, val in enumerate(row):
             t_q.cell(r_idx, c_idx).paragraphs[0].add_run(val)
     format_table(t_q, header_bg="2F5597")
 
-    add_callout(doc, "El resultado empírico de la simulación (W = 24.25 h) valida plenamente el modelo conceptual al ubicarse entre el M/M/3 ideal (18.87 h) y el modelo conservador de Allen-Cunneen (28.50 a 43.36 h).", "VALIDACIÓN DE COLAS")
+    add_callout(doc, "Con las maniobras conjuntas de 1.5h corregidas, el modelo M/M/3 analítico con Ws = 7.11h predice Wq = 7.85h y W = 14.96h, coincidiendo de forma casi exacta con la simulación real (Wq = 7.90h, W = 15.00h).", "VALIDACIÓN DE COLAS")
 
     # SECCIÓN 3: EXPERIMENTACIÓN Y ANÁLISIS
     h1 = doc.add_heading(level=1)
@@ -378,34 +350,35 @@ def build_full_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scratch/T
     # Consigna b
     h2 = doc.add_heading(level=2)
     h2.add_run("Consigna b: Diagnóstico de la Operación Actual vs. Umbral de 16h").font.color.rgb = COLOR_SECONDARY
-    doc.add_paragraph("La operación actual promedia W = 24.25 horas, con Wq = 16.32 horas (67.33% espera) y Ws = 7.92 horas (32.67% atención). L = 8.15 buques. El 58.10% de las escalas supera el límite de 16 horas. El reclamo de las navieras es totalmente fundado.")
+    doc.add_paragraph("La operación actual promedia W = 15.00 horas, con Wq = 7.90 horas (52.62% espera en rada) y Ws = 7.11 horas (47.38% en berma). De Ws: 4.75 h son atención efectiva de grúa (31.67%), 0.86 h son espera por grúa libre amarrado (5.73%) y 1.50 h son maniobras náuticas conjuntas (10.00%). La espera total inactiva suma 58.35%.")
+    doc.add_paragraph("Aunque el promedio cumple con 15.00h, el 32.91% de las escalas excede las 16 horas (en TransPatagonia Line excede el 45.10%).")
     add_figure_with_caption(doc, "plots/fig2_desglose_estadia.png", "Figura 6: Desglose de Estadía Portuaria: Tiempo en Berma (Ws) vs. Espera en Rada (Wq)", width_inches=5.8)
 
     # Consigna c
     h2 = doc.add_heading(level=2)
     h2.add_run("Consigna c: Compromiso de 16h y Beneficio de la 4ª Grúa STS").font.color.rgb = COLOR_SECONDARY
-    doc.add_paragraph("La demanda diaria máxima soportable bajo la operación actual para cumplir W <= 16h es de 7.40 buques/día. Con la 4ª grúa, la terminal puede absorber la demanda actual de 8.09 buques/día alcanzando W = 16.46 horas (la espera en rada cae un 44.5% a 9.06 h).")
+    doc.add_paragraph("Con la 4ª grúa, la estadía total cae a 9.38 horas (reducción de 37.5%). La espera en rada se contrae un 58.7% (de 7.90 h a 3.26 h), y el incumplimiento cae de 32.91% a tan solo 11.85%. A 8.09 buques/día, la 4ª grúa garantiza que el puerto opere con total holgura.")
     add_figure_with_caption(doc, "plots/fig1_capacidad_demanda.png", "Figura 7: Capacidad Operativa y Cumplimiento del Umbral de 16h vs. Demanda Diaria", width_inches=5.8)
 
     # Consigna d
     h2 = doc.add_heading(level=2)
     h2.add_run("Consigna d: Política de Patio y Camiones").font.color.rgb = COLOR_SECONDARY
-    doc.add_paragraph("Penalizar la impuntualidad de camiones reduce la tasa de tardíos del 25% al 10%, evitando superar el 75% del patio (>2.250 slots) en momentos pico. La segregación de slots reefer es imprescindible durante octubre a diciembre, donde la demanda de frío sube un +57%.")
+    doc.add_paragraph("Penalizar la impuntualidad de camiones reduce la tasa de tardíos del 25% al 10%, estabilizando el patio por debajo del 75% (>2.250 slots) en momentos pico. La segregación de slots reefer es imprescindible durante octubre a diciembre, donde la demanda de frío sube un +57%.")
 
     # Consigna e
     h2 = doc.add_heading(level=2)
     h2.add_run("Consigna e: Temporada de Cruceros y Reserva Exclusiva").font.color.rgb = COLOR_SECONDARY
-    doc.add_paragraph("Conceder la reserva exclusiva añade +12.88 horas de demora por buque a la carga, generando sobrecostos de inmovilización de USD 23.8M a USD 47.5M. El canon compensatorio debería ser de USD 990k a USD 1.98M por escala (frente a USD 60k ofrecidos). Se debe rechazar la exclusividad y reportar los cruceros por separado.")
+    doc.add_paragraph("Conceder la reserva exclusiva añade +2.31 horas de demora por buque a la carga, generando demoras de 6.820 h/año con pérdidas de inmovilización de USD 4.26M a USD 8.52M por temporada. El canon compensatorio debería ser de USD 178k a USD 355k por escala (vs USD 60k ofrecidos). Se debe rechazar la exclusividad y reportar los cruceros por separado.")
 
     # Consigna f
     h2 = doc.add_heading(level=2)
     h2.add_run("Consigna f: Proyecto Industrial y Criterios bajo Incertidumbre").font.color.rgb = COLOR_SECONDARY
-    doc.add_paragraph("Bajo los escenarios Base (+35%) y Optimista (+100%), las 3 bermas colapsan (rho > 1.13). Construir la 4ª berma domina bajo todos los criterios de incertidumbre (Wald: +USD 47.8M vs -USD 1.200M; Savage Regret: USD 0M vs USD 850M). La convicción de la gerencia valida la urgencia de la obra.")
+    doc.add_paragraph("Bajo los escenarios Base (+35%) y Optimista (+100%), las 3 bermas colapsan (rho > 1.13). Construir la 4ª berma domina bajo todos los criterios de incertidumbre (Wald: +USD 19.5M vs -USD 1.200M; Savage Regret: USD 0M vs USD 750M). La convicción de la gerencia valida la urgencia de la obra.")
 
     # Consigna g
     h2 = doc.add_heading(level=2)
     h2.add_run("Consigna g: Análisis de Repago de la 4ª Berma (USD 12M)").font.color.rgb = COLOR_SECONDARY
-    doc.add_paragraph("La 4ª berma ahorra 17.71 horas por buque = 5.97 años-buque de inmovilización evitados al año = USD 48.99 Millones/año de ahorro. El período de repago es de 0.24 años (~2.9 meses).")
+    doc.add_paragraph("La 4ª berma ahorra 7.50 horas por buque = 2.53 años-buque de inmovilización evitados al año = USD 20.76 Millones/año de ahorro. El período de repago es de 0.58 años (~6.9 meses).")
     add_figure_with_caption(doc, "plots/fig3_repago_berma.png", "Figura 8: Período de Repago de la Inversión en 4ª Berma (USD 12M) vs. Costo de Inmovilización", width_inches=5.8)
 
     # SECCIÓN 4: VALIDACIÓN ESTADÍSTICA
@@ -416,10 +389,10 @@ def build_full_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scratch/T
     t_tukey = doc.add_table(rows=5, cols=6)
     t_data = [
         ["Comparación de Escenarios", "Diferencia Medias", "p-valor adj.", "IC 95% Inferior", "IC 95% Superior", "¿Significativo?"],
-        ["Actual (3G) vs 4 Grúas (4G)", "-8.30 h", "0.000", "-9.72 h", "-6.88 h", "Sí (Rechaza H0)"],
-        ["Actual (3G) vs Crucero Exclusivo", "+24.08 h", "0.000", "+22.66 h", "+25.50 h", "Sí (Rechaza H0)"],
-        ["Actual (3G) vs Camión Penalizado", "-1.05 h", "0.228", "-2.47 h", "+0.37 h", "No"],
-        ["4 Grúas vs Crucero Exclusivo", "+32.38 h", "0.000", "+30.96 h", "+33.79 h", "Sí (Rechaza H0)"]
+        ["Actual (3G) vs 4 Grúas (4G)", "-4.33 h", "0.000", "-5.11 h", "-3.55 h", "Sí (Rechaza H0)"],
+        ["Actual (3G) vs Crucero Exclusivo", "+5.15 h", "0.000", "+4.37 h", "+5.93 h", "Sí (Rechaza H0)"],
+        ["Actual (3G) vs Camión Penalizado", "+0.34 h", "0.677", "-0.44 h", "+1.12 h", "No"],
+        ["4 Grúas vs Crucero Exclusivo", "+9.48 h", "0.000", "+8.70 h", "+10.26 h", "Sí (Rechaza H0)"]
     ]
     for r_idx, row in enumerate(t_data):
         for c_idx, val in enumerate(row):
@@ -431,7 +404,7 @@ def build_full_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scratch/T
     # SECCIÓN 5: CONCLUSIONES Y LIBRERÍAS
     h1 = doc.add_heading(level=1)
     h1.add_run("Sección 5: Conclusiones Estratégicas y Librerías Utilizadas").font.color.rgb = COLOR_PRIMARY
-    doc.add_paragraph("Recomendaciones finales: 1) Incorporar la 4ª grúa de inmediato; 2) Invertir en la 4ª berma (repago en 3 meses); 3) Rechazar la reserva exclusiva de crucero; 4) Relevo en caliente de turnos y penalización de camiones tardíos.")
+    doc.add_paragraph("Recomendaciones finales: 1) Incorporar la 4ª grúa de inmediato; 2) Invertir en la 4ª berma (repago en ~7 meses); 3) Rechazar la reserva exclusiva de crucero; 4) Relevo en caliente de turnos y penalización de camiones tardíos.")
 
     t_lib = doc.add_table(rows=8, cols=3)
     lib_data = [
@@ -453,7 +426,7 @@ def build_full_word_doc(output_path="C:/Users/ASUS/.gemini/antigravity/scratch/T
     print(f"Documento de Informe Completo guardado exitosamente en: {output_path}")
 
 if __name__ == "__main__":
-try:
+    try:
         from src.paths import BASE_DIR
         conceptual_out = str(BASE_DIR / "MODELO_CONCEPTUAL_G08.docx")
         full_out = str(BASE_DIR / "INFORME_EJECUTIVO_PUERTO_SUR.docx")
