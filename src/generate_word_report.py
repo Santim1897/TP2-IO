@@ -119,10 +119,11 @@ def build_conceptual_word_doc(output_path="MODELO_CONCEPTUAL_G08.docx"):
     r_sub.font.size = Pt(11)
     r_sub.font.color.rgb = COLOR_SECONDARY
 
-    t_meta = doc.add_table(rows=6, cols=2)
+    t_meta = doc.add_table(rows=7, cols=2)
     meta_info = [
         ("Materia:", "11.51 / IO51 - Investigación Operativa (ITBA)"),
         ("Comisión y Grupo:", "2° Cuatrimestre 2026 — Grupo 08"),
+        ("Integrantes:", "Bautista Fanelli, Santiago Montiel, Benjamín ..."),
         ("Dataset Asignado:", "data/PuertoSur_escalas_G08.csv (8.852 escalas históricas registradas)"),
         ("Metodología:", "Simulación de Eventos Discretos (DES) & Modelado IDEF0"),
         ("Repositorio Oficial:", "https://github.com/Santim1897/TP2-IO"),
@@ -144,6 +145,16 @@ def build_conceptual_word_doc(output_path="MODELO_CONCEPTUAL_G08.docx"):
     
     doc.add_paragraph("1.2. Objetivo del Estudio de Simulación (Perspectiva Metodológica):").runs[0].bold = True
     doc.add_paragraph("Modelar conceptual y computacionalmente el comportamiento estocástico y dinámico del puerto mediante Simulación de Eventos Discretos (DES), cuantificando los tiempos de espera en rada (Wq), maniobras náuticas conjuntas (U(1, 2) h en total), espera de grúas amarrado y faena efectiva en berma; contrastar la operación actual con modelos teóricos de líneas de espera (M/M/c y M/G/c); identificar los cuellos de botella en muelle y patio; y sustentar con evidencia estadística la toma de decisiones estratégicas (adición de una 4ª grúa pórtico STS, políticas de patio y camiones, incorporación de temporada de cruceros y viabilidad de una 4ª berma).")
+
+    doc.add_paragraph("1.3. Alcance y Supuestos Simplificatorios del Modelo (Diaps. 4 y 21):").runs[0].bold = True
+    doc.add_paragraph("Conforme a la metodología formal de modelado conceptual de la cátedra (orientada a responder ¿Qué? ¿Por qué? ¿Dónde? ¿Cuándo? ¿Quién? ¿Cuánto?):")
+    doc.add_paragraph("• ¿Qué? (Objeto de modelado): Operación integral del muelle y frente de atraque, asignación dinámica de grúas pórtico STS, patio de almacenamiento de contenedores y maniobras náuticas de prácticos y remolcadores.")
+    doc.add_paragraph("• ¿Por qué? (Propósito): Diagnosticar los cuellos de botella que amenazan el umbral contractual de 16 horas de estadía promedio (W <= 16 h) y fundamentar cuantitativamente decisiones estratégicas de expansión física (4ª berma, 4ª grúa, políticas de camiones y cruceros).")
+    doc.add_paragraph("• ¿Dónde? (Límites espaciales): Desde el área de fondeo en rada exterior hasta el muelle de transferencia y la puerta de salida terrestre de camiones externos (terminal gate).")
+    doc.add_paragraph("• ¿Cuándo? (Horizonte temporal): Simulación continua de 3 años de operación (8.852 escalas históricas de G08), considerando estacionalidad frutícola y ciclos diarios de 3 turnos de 8 horas.")
+    doc.add_paragraph("• ¿Quién? (Actores): Buques feeder de 3 servicios regulares, buques de crucero turístico, camiones de transporte terrestre, prácticos náuticos y operarios de estiba.")
+    doc.add_paragraph("• ¿Cuánto? (Nivel de detalle): Modelado discreto a nivel de buque individual, grúa pórtico y slot de patio, agregando contenedores por tipo (Dry, Reefer, OOG).")
+    doc.add_paragraph("Supuestos fundamentales: 1) Maniobras náuticas de 1 a 2 horas en conjunto por buque (media 1.5h total); 2) Máximo 2 grúas por buque con interferencia dual del 85%; 3) Balance de patio 50% import / 50% export; 4) Permanencia media en patio de 72h con 20-30% de camiones tardíos.")
 
     # 2. Variables
     h1 = doc.add_heading(level=1)
@@ -179,11 +190,49 @@ def build_conceptual_word_doc(output_path="MODELO_CONCEPTUAL_G08.docx"):
     doc.add_paragraph("  - NS_16: Porcentaje de buques despachados con estadía <= 16 horas.")
     doc.add_paragraph("  - Payback y Años-buque de inmovilización evitados al año.")
 
+    doc.add_paragraph("2.4. Tabla Formal del Modelo de Datos Cuantificado (Diapositiva 19):").runs[0].bold = True
+    t_datos = doc.add_table(rows=11, cols=6)
+    datos_header = ["Variable", "Descripción", "U.M.", "Valor / Rango", "Relación / Expresión", "Característica"]
+    datos_rows = [
+        datos_header,
+        ["lambda", "Tasa de arribo buques feeder", "buques/día", "8.09 b/d", "Histórico escalas G08", "Poisson no homogéneo (Delta t ~ Exp(2.97h))"],
+        ["Mix", "Composición de carga por escala", "% mov", "55% Dry, 35% Reefer, 10% OOG", "8.852 escalas G08", "Empírica por servicio"],
+        ["mu_dry", "Rendimiento grúa Dry", "mov/hora", "28", "Tasa nominal directa", "Determinística"],
+        ["mu_reefer", "Rendimiento grúa Reefer", "mov/hora", "21", "mu_dry * 0.75 (-25%)", "Determinística"],
+        ["mu_oog", "Rendimiento grúa OOG", "mov/hora", "12", "Aparejos especiales", "Determinística"],
+        ["eta", "Factor interferencia doble grúa", "factor", "0.85", "Prod. combinada = 1.7x", "Determinística"],
+        ["T_maniobra", "Maniobras atraque + desatraque", "horas", "[1.0, 2.0]", "Conjunto entre 1 y 2 h", "Aleatoria U(1.0, 2.0) h (media 1.5h)"],
+        ["T_cambio", "Paradas de cambio de guardia", "minutos", "[10, 15]", "Cada 8h (00, 08, 16h)", "Aleatoria U(10, 15) min"],
+        ["Cap_patio", "Capacidad estática patio", "slots", "3.000", "Límite físico", "Alerta congestión > 2.250 slots (75%)"],
+        ["T_dwell", "Permanencia en patio", "horas", "72", "Almacenaje en tierra", "Exponencial (media = 72h)"]
+    ]
+    for r_idx, row in enumerate(datos_rows):
+        for c_idx, val in enumerate(row):
+            t_datos.cell(r_idx, c_idx).paragraphs[0].add_run(val)
+    format_table(t_datos, header_bg="1F4E79")
+
     # 3. Plan de Análisis
     h1 = doc.add_heading(level=1)
     h1.add_run("3. Plan de Análisis y Visualización de Resultados").font.color.rgb = COLOR_PRIMARY
     doc.add_paragraph("Se estructuró una matriz de experimentación factorial multiescenario: 1) Diagnóstico de línea base física; 2) Barrido de demanda diaria de buques (0.5x a 1.2x) para determinar la capacidad límite bajo 3 vs. 4 grúas; 3) Políticas de ventanas de camiones y zonificación reefer; 4) Impacto de temporada de cruceros con y sin exclusividad; 5) Escenarios del proyecto industrial (+35% y +100%) bajo criterios de decisión bajo incertidumbre (Wald, Savage, Hurwicz, Laplace); 6) Análisis de repago de la 4ª berma.")
     doc.add_paragraph("El protocolo estadístico incluye eliminación del período de calentamiento, réplicas independientes, ANOVA y Test de Comparaciones Múltiples de Tukey HSD (FWER = 0.05).")
+
+    doc.add_paragraph("3.2. Plan de Cuadros y Matriz de Resultados (Diapositiva 15):").runs[0].bold = True
+    t_cuadros = doc.add_table(rows=7, cols=6)
+    cuadros_header = ["Escenario Evaluado", "Variables Control", "W [h] (Media +- IC 95%)", "Wq [h] (Espera)", "Nivel Servicio P(W<=16h)", "Decisión / Conclusión"]
+    cuadros_rows = [
+        cuadros_header,
+        ["Escenario Base (Inciso b)", "B=3, G=3, Pi_std, 1G_noc", "W_base +- Delta W", "Wq_base", "NS_base", "Diagnóstico situación actual"],
+        ["Escenario Capacidad (Inciso c)", "B=3, G=4 vs lambda barrido", "W_cap +- Delta W", "Wq_cap", "NS_cap", "Límite máx. buques/día con W <= 16h"],
+        ["Escenario Patio (Inciso d)", "Pi_cam in {Multa, Ventana}", "W_pat +- Delta W", "Wq_pat", "NS_pat", "Descongestión patio < 75%"],
+        ["Escenario Cruceros (Inciso e)", "Cede 1 Berma (B=2 carga)", "W_cruc +- Delta W", "Wq_cruc", "NS_cruc", "Impacto inmovilización vs USD 60k"],
+        ["Escenario Industrial (Inciso f)", "lambda +35% y +100%", "W_ind +- Delta W", "Wq_ind", "NS_ind", "Matrices bajo incertidumbre"],
+        ["Escenario Payback (Inciso g)", "Expansión 4ª Berma (B=4)", "W_inv +- Delta W", "Wq_inv", "NS_inv", "Repago inversión USD 12M"]
+    ]
+    for r_idx, row in enumerate(cuadros_rows):
+        for c_idx, val in enumerate(row):
+            t_cuadros.cell(r_idx, c_idx).paragraphs[0].add_run(val)
+    format_table(t_cuadros, header_bg="2F5597")
 
     # 4. Relación entre Variables
     h1 = doc.add_heading(level=1)
