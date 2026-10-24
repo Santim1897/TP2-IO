@@ -40,9 +40,10 @@ def main():
     run_step("3. Simulación de Línea Base (Operación Actual)", "src/run_baseline.py")
     run_step("4. Batería Experimental de Escenarios (Consignas c a g)", "src/run_experiments.py")
     
-    # 3. Generación de Gráficos de Publicación (300 DPI) y Documento Word
-    run_step("5. Generación de Gráficos Analíticos de Alta Resolución", "src/generate_plots.py")
-    run_step("6. Exportación de Informe Ejecutivo a Microsoft Word (.docx)", "src/generate_word_report.py")
+    # 3. Generación de Diagramas Conceptuales, Gráficos Analíticos (300 DPI) y Documentos Word
+    run_step("5. Generación de Diagramas del Modelo Conceptual (IDEF0, Causal, Lógicas)", "src/generate_conceptual_diagrams.py")
+    run_step("6. Generación de Gráficos Analíticos de Alta Resolución", "src/generate_plots.py")
+    run_step("7. Exportación de Informes a Microsoft Word (.docx)", "src/generate_word_report.py")
     
     print("\n" + "=" * 75)
     print("   ¡SUITE COMPLETA EJECUTADA CON ÉXITO!")

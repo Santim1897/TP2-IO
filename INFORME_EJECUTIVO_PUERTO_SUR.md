@@ -79,18 +79,31 @@
   * `fig3_repago_berma.png`: Curva paramétrica de período de repago de la 4ª berma según costo de inmovilización.
   * `fig4_tukey_hsd.png`: Diagrama de intervalos de confianza al 95% para las diferencias de medias del Test de Tukey.
 
-### 1.4. Relación entre Variables (Diagrama Causal)
+### 1.4. Relación entre Variables (Diagrama Causal de Influencias)
+A continuación se presenta el **Diagrama Causal de Influencias** que formaliza las relaciones funcionales, polaridades (+/-) y bucles de retroalimentación del sistema:
+
+![Diagrama Causal de Relación entre Variables](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_relacion_variables_causal.png)
+
 1. **Flujo de Arribos $\rightarrow$ Rada:** Los arribos agrupados generan colas en rada ($L_q$) cuando las 3 bermas están ocupadas.
 2. **Asignación de Grúas $\rightarrow$ Tiempo de Berma:** Asignar 2 grúas reduce el tiempo de operación a $1/1.7 \approx 58.8\%$ del tiempo nominal de 1 grúa, pero consume capacidad del muelle.
 3. **Turnos Nocturnos:** La reducción a 1 grúa activa (+ 1 standby) de 00:00 a 08:00 genera acumulación nocturna que satura las bermas al amanecer.
 4. **Patio $\rightarrow$ Grúas:** Si el patio supera los 2.250 slots ($>75\%$), las grúas se demoran esperando slots libres, extendiendo $W_s$, lo que retiene las bermas y dispara la espera en rada $W_q$.
 
-### 1.5. Diagrama IDEF0
+### 1.5. Diagramas IDEF0 (Contexto y Descomposición Funcional)
+La arquitectura de procesos fue modelada mediante el estándar **IDEF0**:
+
+#### Diagrama de Contexto A-0:
+![Diagrama IDEF0 A-0 Contexto](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_idef0_a_menos_0.png)
+
 * **Nivel A-0 (Contexto):**
   * *Entradas:* Buques feeder en rada, contenedores a transferir, camiones externos y arribos de cruceros.
   * *Controles:* Umbral contractual de 16h, capacidad del patio (3.000 slots), régimen de turnos de estiba.
   * *Mecanismos:* Bermas, grúas STS pórtico, tractoristas, prácticos, remolcadores y simulador en SimPy.
   * *Salidas:* Buques atendidos, métricas de estadía ($W, W_q, W_s$), utilización de equipos y costos de inmovilización.
+
+#### Descomposición de Primer Nivel A0:
+![Diagrama IDEF0 A0 Descomposición](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_idef0_a0_descomposicion.png)
+
 * **Descomposición A0:**
   * **A1:** Recepción y Fondeo en Rada (FIFO).
   * **A2:** Maniobra de Entrada y Atraque (1 a 2 horas, grúas inactivas).
@@ -98,11 +111,19 @@
   * **A4:** Desatraque y Salida a Mar Abierto (1 a 2 horas, libera la berma).
 
 ### 1.6. Lógicas del Sistema
+El flujo de eventos operativos del ciclo de escala se sintetiza en el siguiente **Diagrama de Flujo Lógico**:
+
+![Diagrama de Flujo Lógico Operativo](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_logica_flujo_buque.png)
+
 * **Lógica de Rada y Asignación de Berma:** Buques en cola FIFO esperan hasta que haya berma libre y desocupada. Si un crucero tiene reserva exclusiva, dicha berma no puede ser tomada por buques feeder.
 * **Lógica de Grúas y Turnos:** Productividad nominal unitaria de 28 mov/h (dry), 21 mov/h (reefer), 12 mov/h (oog). Doble grúa con 85% de eficiencia combinada. Turno nocturno con 1 activa y 1 standby con 15–20 min de alistamiento. Paradas de 10–15 min en cada cambio de guardia.
-* **Lógica de Cruceros:** Arriban 2 por semana durante 3 meses, ocupando 28–36 horas continuas sin requerir grúas pórtico.
+* **Lógica de Cruceros:** Arriban 2 por semana durante 3 meses, ocupando 28–36 horas continuas sin requerir grúas pórtico. Con exclusividad, bloquea 1 berma comercial.
 
 ### 1.7. Elementos del Simulador (SimPy)
+A continuación se detalla la arquitectura de objetos y procesos del simulador:
+
+![Arquitectura de Componentes del Simulador SimPy](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_elementos_simulador.png)
+
 * **Entidades:** `EntidadBuque`, `EntidadCrucero`, `Contenedor`, `CamionExterno`.
 * **Recursos:** `simpy.Resource` para bermas (capacidad 3 o 4), grúas pórtico (capacidad dinámica diurna/nocturna) y `simpy.Container` para slots de patio (3.000 slots).
 * **Monitores:** Registro de eventos microsegundo a microsegundo para análisis econométrico y estadístico.
