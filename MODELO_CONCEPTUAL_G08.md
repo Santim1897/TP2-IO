@@ -24,6 +24,22 @@ Formalizar, diseñar e implementar un **modelo de simulación de eventos discret
 4. Identificar la localización exacta de los cuellos de botella del sistema (grúas pórtico STS, bermas de atraque, dotaciones nocturnas reducidas y saturación del patio de almacenamiento $>75\%$).
 5. Proporcionar a la dirección del consorcio evidencia cuantitativa y estadísticamente rigurosa (mediante diseño de experimentos, ANOVA e intervalos de confianza de Tukey HSD al 95%) para respaldar decisiones de inversión en infraestructura y políticas de operación comercial.
 
+### 1.3. Alcance y Supuestos Simplificatorios del Modelo
+Conforme a la metodología formal de modelado conceptual de la cátedra (orientada a responder *¿Qué? ¿Por qué? ¿Dónde? ¿Cuándo? ¿Quién? ¿Cuánto?*):
+* **¿Qué? (Objeto de modelado):** Operación integral del muelle y frente de atraque, asignación de grúas pórtico STS, patio de almacenamiento de contenedores y maniobras náuticas de prácticos y remolcadores.
+* **¿Por qué? (Propósito):** Diagnosticar los cuellos de botella que amenazan el umbral contractual de 16 horas de estadía promedio ($W \le 16\text{ h}$) y fundamentar cuantitativamente decisiones estratégicas de expansión física (4ª berma, 4ª grúa, políticas de camiones y cruceros).
+* **¿Dónde? (Límites espaciales):** Desde el área de fondeo en rada exterior hasta el muelle de transferencia y la puerta de salida terrestre de camiones externos (*terminal gate*).
+* **¿Cuándo? (Horizonte temporal):** Simulación continua de 3 años de operación (correspondiente al horizonte muestral del Grupo 8 con 8.852 escalas), considerando variaciones estacionales (cosecha frutícola) y ciclos diarios de 3 turnos de 8 horas.
+* **¿Quién? (Actores e interacciones):** Buques portacontenedores feeder de 3 servicios regulares, buques de crucero turístico, camiones de transporte terrestre, prácticos náuticos y operarios de estiba.
+* **¿Cuánto? (Nivel de detalle):** Modelado discreto a nivel de escala individual de buque, grúa pórtico y slot de patio, agregando el movimiento de contenedores por tipo (Dry, Reefer, OOG).
+
+**Supuestos Simplificatorios Fundamentales:**
+1. **Maniobras Náuticas:** Práctico y remolcador tienen disponibilidad suficiente para atender a los buques ni bien se libera una berma; la duración combinada de atraque y desatraque es de 1 a 2 horas en total ($T_{maniobra\_total} \sim U(1.0, 2.0)$ h).
+2. **Asignación de Grúas:** Se asigna un máximo de 2 grúas por buque cuando hay disponibilidad en el muelle. Dos grúas concurrentes operan con una interferencia mutua que reduce su productividad combinada al 85% de la suma directa.
+3. **Balance de Masa en Patio:** Cada escala transfiere al patio contenedores de importación (descarga) y retira contenedores de exportación (carga) en proporción balanceada (aproximadamente 50% descarga y 50% carga).
+4. **Permanencia en Patio:** El tiempo medio de permanencia de los contenedores en el patio es de 72 horas, modulado por la puntualidad de llegada de los camiones externos (20% a 30% fuera de ventana horaria).
+5. **Condiciones Meteorológicas:** No se contemplan cierres hidrometeorológicos extraordinarios de puerto, asumiéndose operatividad continua los 365 días del año.
+
 ---
 
 ## 2. Variables de Decisión y de Referencia
@@ -76,7 +92,7 @@ Para formular el modelo matemático y computacional, las variables se clasifican
   * $\mu_{reefer} = 28 \times (1 - 0.25) = 21$ movimientos/hora.
   * $\mu_{oog} = 12$ movimientos/hora.
 * $\eta$: Factor de interferencia operativa entre grúas concurrentes sobre la misma bodega ($\eta = 0.85$ de la suma de productividades; rendimiento combinado = $1.7 \times$ productividad unitaria).
-* $T_{man\_in}, T_{man\_out}$: Tiempos de maniobras náuticas de practicaje y remolque ($T_{man} \sim U(1.0, 2.0)$ horas).
+* $T_{man\_in}, T_{man\_out}$: Tiempos de maniobras náuticas de practicaje y remolque. Insumen **en conjunto entre 1 y 2 horas por buque** ($T_{maniobra\_total} \sim U(1.0, 2.0)$ horas, media total de $1.5\text{ h}$ por buque, desglosado simétricamente en entrada $T_{man\_in} \sim U(0.5, 1.0)\text{ h}$ y salida $T_{man\_out} \sim U(0.5, 1.0)\text{ h}$).
 * $T_{cambio\_turno}$: Parada no operativa por relevo de estiba ($T_{cambio} \sim U(10, 15)$ minutos cada 8 horas, a las 00:00, 08:00 y 16:00).
 * $Cap_{patio}$: Capacidad estática máxima de almacenamiento (3.000 slots).
 * $T_{dwell}$: Tiempo de permanencia promedio de un contenedor en patio ($\mu = 72$ horas).
@@ -98,6 +114,27 @@ Para formular el modelo matemático y computacional, las variables se clasifican
 * $P(O_{patio} > 2.250)$: Probabilidad de que la ocupación del patio supere el 75%, induciendo demoras a las grúas STS.
 * $Payback$: Período de repago financiero simple de las inversiones en años.
 
+### 2.4. Modelo de Datos Cuantificado (Parámetros Empíricos G08)
+Siguiendo el estándar de especificación formal de datos de la cátedra (Diapositiva 19 de `IO51_Teoria_Simulacion_Modelo_de_Datos_Ajuste.pdf`):
+
+| Variable | Descripción | U.M. | Valor Base / Rango | Relación / Expresión | Característica (Tipo y Parámetros) |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| $\lambda$ | Tasa de arribo de buques feeder | buques/día | 8.09 b/d | Histórico `PuertoSur_escalas_G08.csv` | Poisson no homogéneo ($\Delta t \sim \text{Exp}(\mu=2.97\text{h})$) |
+| $Mix$ | Composición de carga por buque | % mov | 55% Dry, 35% Reefer, 10% OOG | Registros empíricos de 8.852 escalas | Distribución empírica por servicio |
+| $\mu_{dry}$ | Rendimiento nominal grúa contenedor Dry | mov/hora | 28 | Tasa directa de diseño | Constante determinística |
+| $\mu_{reefer}$ | Rendimiento grúa contenedor Reefer | mov/hora | 21 | $\mu_{dry} \times 0.75$ (-25% por conexión eléctrica) | Constante determinística |
+| $\mu_{oog}$ | Rendimiento grúa contenedor OOG | mov/hora | 12 | Aparejos especiales y operarios extra | Constante determinística |
+| $\eta$ | Factor de interferencia por doble grúa | factor | 0.85 | Productividad combinada = $1.70 \times \mu_i$ | Constante determinística |
+| $T_{maniobra}$ | Maniobras náuticas (atraque + desatraque) | horas | [1.0, 2.0] | Insumen en conjunto entre 1 y 2 horas | Aleatoria $U(1.0, 2.0)$ h ($\mu=1.5\text{ h}$) |
+| $T_{cambio}$ | Paradas por cambio de turno (3 por día) | minutos | [10, 15] | Ocurren a las 00:00, 08:00 y 16:00 | Aleatoria $U(10, 15)$ min |
+| $G_{noc}$ | Grúas activas en turno nocturno | grúas | 1 activa + 1 standby | Standby demora 15 a 20 min alistamiento | $1 + U(15/60, 20/60)\text{ h}$ de demora |
+| $Cap_{patio}$ | Capacidad estática del patio | slots | 3.000 | Capacidad física instalada | Límite determinístico |
+| $T_{dwell}$ | Tiempo de permanencia en patio | horas | 72 | Tiempo medio de almacenaje en tierra | Exponencial ($\mu=72\text{ h}$) |
+| $P_{tardio}$ | Proporción camiones fuera de ventana | % | 20% a 30% | Factor de puntualidad de transporte | Aleatoria $U(0.20, 0.30)$ |
+| $T_{crucero}$ | Duración de escala de crucero | horas | [28, 36] | 2 escalas semanales (meses 10 a 12) | Aleatoria $U(28, 36)$ h |
+| $C_{inmov}$ | Costo buque detenido en rada/puerto | USD/día | 15.000 - 30.000 | Según porte y fletamento de naviera | Parámetro de sensibilidad |
+| $Inv_{B4}$ | Inversión en 4ª berma de atraque | USD | 12.000.000 | Vida útil proyectada: 20 años | Inversión de capital fija |
+
 ---
 
 ## 3. Plan de Análisis y Visualización de Resultados
@@ -114,12 +151,24 @@ Se estructuró una matriz factorial de simulación que cubre los factores clave 
 | **Tráfico Industrial** | Actual ($1.0\times$) vs. Base ($1.35\times$) vs. Optimista ($2.0\times$) | Evaluar colapso del muelle y aplicar matrices de decisión bajo incertidumbre (Consigna f). |
 | **Infraestructura Bermas ($B$)** | 3 bermas vs. 4 bermas | Calcular el período de repago de USD 12M según el ahorro de años-buque (Consigna g). |
 
-### 3.2. Protocolo de Ejecución y Rigor Estadístico
+### 3.2. Plan de Cuadros y Matriz de Resultados
+Conforme al estándar formal de la cátedra (Diapositiva 15 de `IO51_Teoria_Modelo_Conceptual_Simulacion.pdf`), el **Plan de Cuadros** define la estructura tabular con la que se reportarán y contrastarán los resultados de simulación, especificando las variables de decisión (control) y las variables de referencia con sus respectivos intervalos de confianza al 95%:
+
+| Escenario Evaluado | Variables de Decisión ($B, G, \Pi_{cam}, \Pi_{noc}$) | $W$ [h] (Media $\pm \text{IC}_{95\%}$) | $W_q$ [h] (Espera en Rada) | $W_s$ [h] (Tiempo en Berma) | Nivel de Servicio $P(W \le 16\text{h})$ | Ocupación Bermas ($\rho_B$) | Ocupación Grúas ($\rho_G$) | Decisión / Conclusión |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Escenario Base (Inciso b)** | $B=3, G=3, \Pi_{std}, 1G_{noc}$ | $W_{base} \pm \Delta W$ | $W_{q, base}$ | $W_{s, base}$ | $NS_{base}$ | $\rho_{B, base}$ | $\rho_{G, base}$ | Diagnóstico de situación actual |
+| **Escenario Capacidad (Inciso c)** | $B=3, G=4$ vs. $\lambda$ barrido | $W_{cap} \pm \Delta W$ | $W_{q, cap}$ | $W_{s, cap}$ | $NS_{cap}$ | $\rho_{B, cap}$ | $\rho_{G, cap}$ | Límite máx. buques/día con $W \le 16\text{h}$ |
+| **Escenario Patio (Inciso d)** | $\Pi_{cam} \in \{\text{Multa}, \text{Ventana}\}$ | $W_{pat} \pm \Delta W$ | $W_{q, pat}$ | $W_{s, pat}$ | $NS_{pat}$ | $\rho_{B, pat}$ | $\rho_{G, pat}$ | Descongestión patio $<75\%$ |
+| **Escenario Cruceros (Inciso e)** | Cede 1 Berma ($B=2$ p/carga) | $W_{cruc} \pm \Delta W$ | $W_{q, cruc}$ | $W_{s, cruc}$ | $NS_{cruc}$ | $\rho_{B, cruc}$ | $\rho_{G, cruc}$ | Impacto inmovilización vs. USD 60k |
+| **Escenario Industrial (Inciso f)** | $\lambda +35\%$ (Base) y $+100\%$ (Opt) | $W_{ind} \pm \Delta W$ | $W_{q, ind}$ | $W_{s, ind}$ | $NS_{ind}$ | $\rho_{B, ind}$ | $\rho_{G, ind}$ | Matrices bajo incertidumbre |
+| **Escenario Payback (Inciso g)** | Expansión a 4ª Berma ($B=4$) | $W_{inv} \pm \Delta W$ | $W_{q, inv}$ | $W_{s, inv}$ | $NS_{inv}$ | $\rho_{B, inv}$ | $\rho_{G, inv}$ | Período de repago de USD 12M |
+
+### 3.3. Protocolo de Ejecución y Rigor Estadístico
 1. **Período de Calentamiento (*Warm-up*):** Se determinó mediante el método de Welch una ventana de 100 escalas iniciales para alcanzar el régimen estacionario en la ocupación del patio y rada, descartándose de las estadísticas finales.
 2. **Réplicas Independientes:** Para los barridos de sensibilidad se emplearon réplicas independientes generadas con semillas aleatorias diferenciadas.
 3. **Pruebas de Hipótesis y Comparaciones Múltiples:** Se aplicó ANOVA unifactorial y el **Test de Comparaciones Múltiples de Tukey (HSD)** con nivel de significancia familiar $\text{FWER} = 0.05$ para validar si las diferencias de medias entre configuraciones son estadísticamente significativas.
 
-### 3.3. Plan de Visualización Gráfica
+### 3.4. Plan de Visualización Gráfica
 Se definieron y generaron 4 figuras de alta resolución (300 DPI) para sustentar el reporte gerencial:
 * **Figura 1 (`fig1_capacidad_demanda.png`):** Curva paramétrica de estadía $W$ y nivel de servicio vs. demanda diaria (buques/día) para 3 y 4 grúas.
 * **Figura 2 (`fig2_desglose_estadia.png`):** Gráfico de barras apiladas comparando el tiempo en berma ($W_s$) vs. espera en rada ($W_q$).
@@ -132,7 +181,7 @@ Se definieron y generaron 4 figuras de alta resolución (300 DPI) para sustentar
 
 El sistema portuario opera como una red estocástica altamente acoplada. A continuación se presenta el **Diagrama Causal de Influencias y Bucles de Retroalimentación**:
 
-![Diagrama Causal de Relación entre Variables](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_relacion_variables_causal.png)
+![Diagrama Causal de Relación entre Variables](plots/fig_relacion_variables_causal.png)
 
 ### Bucles de Retroalimentación y Mecanismos de Fricción:
 1. **Bucle de Muelle (Congestión en Rada):**
@@ -155,7 +204,7 @@ La estructura funcional de los procesos de la terminal se formalizó siguiendo l
 ### 5.1. Diagrama de Contexto A-0
 Representa la función global del sistema, sus Entradas (Inputs), Controles (Controls), Mecanismos (Mechanisms) y Salidas (Outputs):
 
-![Diagrama IDEF0 A-0 Contexto](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_idef0_a_menos_0.png)
+![Diagrama IDEF0 A-0 Contexto](plots/fig_idef0_a_menos_0.png)
 
 * **Entradas (I):** Buques portacontenedores feeder en rada (G08), carga de importación/exportación (Dry, Reefer, OOG), camiones externos de retiro y arribos de cruceros.
 * **Controles (C):** Umbral contractual de navieras ($W \le 16\text{ h}$), régimen de turnos de estiba (8h) con paradas de 10-15 min, capacidad física de patio (3.000 slots) y políticas de ventanas de camiones.
@@ -165,12 +214,12 @@ Representa la función global del sistema, sus Entradas (Inputs), Controles (Con
 ### 5.2. Descomposición de Primer Nivel A0
 Descompone la terminal en sus cuatro actividades operativas secuenciales:
 
-![Diagrama IDEF0 A0 Descomposición](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_idef0_a0_descomposicion.png)
+![Diagrama IDEF0 A0 Descomposición](plots/fig_idef0_a0_descomposicion.png)
 
 * **A1: Recepción y Fondeo en Rada:** Los buques arriban con tasa $\lambda = 8.09$ b/d. Si todas las bermas están ocupadas (o reservadas para crucero), aguardan en cola bajo disciplina FIFO acumulando tiempo de espera $W_q$.
-* **A2: Maniobra de Entrada y Atraque:** Al liberarse una berma, se asigna práctico y remolcador. Insume entre 1 y 2 horas ($U(1, 2)$ h). Durante este lapso la berma pasa a estar ocupada, pero las grúas pórtico no pueden operar.
+* **A2: Maniobra de Entrada y Atraque:** Al liberarse una berma, se asigna práctico y remolcador. Insume entre 0.5 y 1.0 hora ($U(0.5, 1.0)$ h), correspondiente a la primera mitad del tiempo conjunto de maniobra ($U(1.0, 2.0)$ h total). Durante este lapso la berma pasa a estar ocupada, pero las grúas pórtico no pueden operar.
 * **A3: Operación de Grúas y Gestión de Patio:** El buque amarrado solicita hasta 2 grúas disponibles. Las grúas operan a tasas específicas según el mix de carga (dry, reefer, OOG), afectadas por interferencia combinada (85%), cambio de turnos y dotaciones nocturnas. Si la ocupación del patio supera el 75%, se induce una penalidad de espera por slot.
-* **A4: Desatraque y Salida:** Finalizada la transferencia de carga, se solicita práctico y remolcador para desamarrar y salir a mar abierto ($U(1, 2)$ h). Al concluir, la berma queda formalmente libre para el siguiente buque en cola.
+* **A4: Desatraque y Salida:** Finalizada la transferencia de carga, se solicita práctico y remolcador para desamarrar y salir a mar abierto ($U(0.5, 1.0)$ h; completando las 1 a 2 horas conjuntas de maniobra). Al concluir, la berma queda formalmente libre para el siguiente buque en cola.
 
 ---
 
@@ -178,7 +227,7 @@ Descompone la terminal en sus cuatro actividades operativas secuenciales:
 
 A continuación se ilustra el **Diagrama de Flujo Lógico Operativo** que rige el ciclo de vida de cada buque:
 
-![Diagrama de Flujo Lógico Operativo](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_logica_flujo_buque.png)
+![Diagrama de Flujo Lógico Operativo](plots/fig_logica_flujo_buque.png)
 
 ### Detalle de las Lógicas Algorítmicas:
 
@@ -196,7 +245,7 @@ ALGORITMO Asignar_Berma(Buque):
 
 #### Lógica 2: Maniobra Náutica de Entrada
 ```text
-DURACIÓN: T_atraque = Uniforme(1.0, 2.0) horas
+DURACIÓN: T_atraque = Uniforme(0.5, 1.0) horas (Maniobra total atraque + desatraque = Uniforme(1.0, 2.0) horas en conjunto)
 ESTADO: Berma = OCUPADA
 RECURSOS STS: INACTIVOS (las grúas no pueden posicionarse sobre la bodega durante la maniobra)
 ```
@@ -258,7 +307,7 @@ GRÚAS PÓRTICO: 0 (No utiliza equipos de muelle; opera con medios propios)
 
 #### Lógica 7: Desatraque y Salida
 ```text
-DURACIÓN: T_desatraque = Uniforme(1.0, 2.0) horas
+DURACIÓN: T_desatraque = Uniforme(0.5, 1.0) horas (completa la maniobra total de 1.0 a 2.0 horas en conjunto)
 AL FINALIZAR: Se libera formalmente la berma y se registra W_total = t_zarpada - t_arribo
 ```
 
@@ -268,7 +317,7 @@ AL FINALIZAR: Se libera formalmente la berma y se registra W_total = t_zarpada -
 
 El simulador computacional se construyó en Python utilizando la librería de eventos discretos **SimPy**. La siguiente figura ilustra la arquitectura de clases, recursos y monitores:
 
-![Arquitectura de Componentes del Simulador SimPy](file:///C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots/fig_elementos_simulador.png)
+![Arquitectura de Componentes del Simulador SimPy](plots/fig_elementos_simulador.png)
 
 ### 7.1. Entidades (Processes de SimPy)
 * `proceso_buque(env, escala, recursos, monitor)`: Modela el ciclo de vida de cada buque feeder (arribo, espera en rada, maniobra de entrada, amarre, despacho de grúas, transferencia y maniobra de salida).

@@ -13,7 +13,7 @@ import matplotlib.patches as patches
 import numpy as np
 import os
 
-out_dir = "C:/Users/ASUS/.gemini/antigravity/scratch/TP2-IO/plots"
+out_dir = os.path.join(os.path.dirname(__file__), "..", "plots")
 os.makedirs(out_dir, exist_ok=True)
 
 # Configuración general
