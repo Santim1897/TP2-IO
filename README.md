@@ -15,6 +15,8 @@ Este repositorio contiene el modelo conceptual, el análisis del histórico G08,
 > Para la primera entrega se evalúa exclusivamente el modelo conceptual del sistema.  
 > 👉 **Tablero de diagnóstico y puntos críticos a corregir:** [docs/DIAGNOSTICO_MODELO_CONCEPTUAL.md](docs/DIAGNOSTICO_MODELO_CONCEPTUAL.md)  
 > 👉 **Hoja de ruta y backlog del equipo:** [docs/BACKLOG_AUDITORIA.md](docs/BACKLOG_AUDITORIA.md)
+> 👉 **PDF presentado por el Grupo 08:** [docs/TP2_Grupo8_primera_entrega.pdf](docs/TP2_Grupo8_primera_entrega.pdf)
+> Los archivos `MODELO_CONCEPTUAL_G08.md` y `MODELO_CONCEPTUAL_G08.docx` son documentos de trabajo distintos del PDF presentado.
 
 ---
 

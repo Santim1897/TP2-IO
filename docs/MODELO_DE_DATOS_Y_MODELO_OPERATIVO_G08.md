@@ -175,9 +175,8 @@ La ley de Little que figura en un informe previo del repositorio no es validaci�
 
 ## 4. Fuentes y trazabilidad
 
-1. Cátedra IO51, *Trabajo Práctico N° 2: Puerto Sur*, 2026 2C, enunciado general, especialmente pp. 1–6.
+1. Cátedra IO51, `IO51-TP2 - Puerto Sur.pdf`, enunciado general, especialmente pp. 1–6.
 2. `data/PuertoSur_escalas_G08.csv`, registro histórico de Grupo 08.
-3. *TP2_Grupo8.pdf*, primera entrega del Grupo 08: modelo conceptual.
-4. `MODELO_CONCEPTUAL_G08.md`, modelo conceptual en el repositorio.
-5. Cátedra IO51, `assets/IO51_Teoria_Simulacion_Modelo_de_Datos_Ajuste.pdf`.
-6. Código revisado del repositorio: ajuste de datos, parámetros, simulador y experimentos.
+3. `docs/TP2_Grupo8_primera_entrega.pdf`, modelo conceptual presentado por el Grupo 08.
+4. Cátedra IO51, `assets/IO51_Teoria_Simulacion_Modelo_de_Datos_Ajuste.pdf`.
+5. Código del repositorio: análisis de datos, parámetros, simulador y experimentos.
