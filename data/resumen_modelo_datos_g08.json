@@ -1,0 +1,207 @@
+{
+  "metadata": {
+    "dataset": "PuertoSur_escalas_G08.csv",
+    "rows": 8852,
+    "unique_scale_ids": 8852,
+    "start": "2023-08-01 00:28",
+    "end": "2026-07-30 16:56",
+    "span_days": 1094.6861111111111,
+    "arrival_rate_per_day": 8.086336265849926,
+    "arrival_rate_per_h": 0.3369306777437469,
+    "interarrival_mean_h": 2.968304899634693,
+    "interarrival_sd_h": 7.403758233834162,
+    "interarrival_cv": 2.4942714728346598
+  },
+  "integrity": {
+    "missing_required_values": 0,
+    "duplicate_scale_ids": 0,
+    "non_decreasing_arrivals": true,
+    "simultaneous_arrival_pairs": 25,
+    "negative_moves": 0
+  },
+  "arrivals_by_service": {
+    "Austral Feeder": {
+      "arrivals": 3875,
+      "share": 0.4377541798463624,
+      "interarrival_mean_h": 6.781741524694545,
+      "interarrival_sd_h": 12.332373360423425,
+      "interarrival_cv": 1.8184670287885802,
+      "moves_mean": {
+        "dry": 76.90554838709677,
+        "reefer": 18.48,
+        "oog": 2.9455483870967742,
+        "total": 98.33109677419355
+      },
+      "moves_sd": {
+        "dry": 17.91371672647948,
+        "reefer": 7.136713487392903,
+        "oog": 1.0605702080264088,
+        "total": 21.534428155471105
+      },
+      "workload_1_crane_mean_h": 3.8720890937019967,
+      "berth_time_1_crane_reference_mean_h": 5.372089093701996
+    },
+    "Andes Container Line": {
+      "arrivals": 3325,
+      "share": 0.3756213285133303,
+      "interarrival_mean_h": 7.902035699959888,
+      "interarrival_sd_h": 13.763083503228165,
+      "interarrival_cv": 1.741713657823392,
+      "moves_mean": {
+        "dry": 112.67488721804511,
+        "reefer": 36.892631578947366,
+        "oog": 4.640601503759399,
+        "total": 154.2081203007519
+      },
+      "moves_sd": {
+        "dry": 23.857854432777305,
+        "reefer": 11.924005626912418,
+        "oog": 1.5034575871315405,
+        "total": 30.336024169959995
+      },
+      "workload_1_crane_mean_h": 6.167611886860008,
+      "berth_time_1_crane_reference_mean_h": 7.667611886860007
+    },
+    "TransPatagonia Line": {
+      "arrivals": 1652,
+      "share": 0.18662449164030728,
+      "interarrival_mean_h": 15.901594992933575,
+      "interarrival_sd_h": 22.973334919418548,
+      "interarrival_cv": 1.4447189058473409,
+      "moves_mean": {
+        "dry": 153.85290556900728,
+        "reefer": 62.31113801452784,
+        "oog": 6.571428571428571,
+        "total": 222.73547215496367
+      },
+      "moves_sd": {
+        "dry": 31.191785326709272,
+        "reefer": 17.40973214921149,
+        "oog": 2.1200452877594564,
+        "total": 40.835663631027025
+      },
+      "workload_1_crane_mean_h": 9.009562723394444,
+      "berth_time_1_crane_reference_mean_h": 10.509562723394442
+    }
+  },
+  "reefer_seasonality": {
+    "high_months": [
+      10,
+      11,
+      12
+    ],
+    "low_months": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "high_arrivals": 2315,
+    "low_arrivals": 6537,
+    "reefer_mean_high": 45.52354211663067,
+    "reefer_mean_low": 29.345112436897658,
+    "reefer_high_to_low_ratio": 1.5513159888046892
+  },
+  "technical_parameters": {
+    "crane_rates_moves_per_h": {
+      "dry": 28.0,
+      "reefer": 21.0,
+      "oog": 12.0
+    },
+    "two_crane_joint_factor": 1.7,
+    "berths_base": 3,
+    "maneuver_reference_mean_h": 1.5,
+    "maneuver_reference_status": "Midpoint of the stated 1-2 h combined range; assumption, not observed mean.",
+    "mean_nominal_work_1_crane_h": 5.6931148193574765,
+    "sd_nominal_work_1_crane_h": 2.2320870556761987,
+    "mean_constructed_berth_time_1_crane_h": 7.1931148193574765,
+    "sd_constructed_berth_time_1_crane_h": 2.2320870556761983,
+    "cv_constructed_berth_time_1_crane": 0.31030883167183737
+  },
+  "a_priori_queue_estimates": [
+    {
+      "model": "M/M/3 Erlang C",
+      "arrival_assumption": "Poisson estacionario",
+      "service_assumption": "Exponencial con media empírica de trabajo nominal",
+      "status": "stable",
+      "servers": 3,
+      "lambda_per_h": 0.3369306777437469,
+      "mu_per_h": 0.13902183200369445,
+      "rho": 0.807860350391568,
+      "p_wait": 0.6600265022873062,
+      "mean_service_h": 7.1931148193574765,
+      "wq_h": 8.236450977968186,
+      "w_h": 15.429565797325662,
+      "lq_vessels": 2.775113010209968,
+      "l_vessels": 5.198694061384672
+    },
+    {
+      "model": "M/G/3 Allen-Cunneen",
+      "arrival_assumption": "Poisson estacionario",
+      "service_assumption": "Servicio general; variabilidad empírica construida",
+      "servers": 3,
+      "lambda_per_h": 0.3369306777437469,
+      "rho": 0.807860350391568,
+      "mean_service_h": 7.1931148193574765,
+      "cv_arrival": 1.0,
+      "cv_service": 0.31030883167183737,
+      "wq_h": 4.514775891106378,
+      "w_h": 11.707890710463854,
+      "lq_vessels": 1.5211665008516009,
+      "l_vessels": 3.9447475520263047
+    },
+    {
+      "model": "G/G/3 Allen-Cunneen",
+      "arrival_assumption": "Variabilidad agregada medida; estacionariedad no demostrada",
+      "service_assumption": "Servicio general; variabilidad empírica construida",
+      "servers": 3,
+      "lambda_per_h": 0.3369306777437469,
+      "rho": 0.807860350391568,
+      "mean_service_h": 7.1931148193574765,
+      "cv_arrival": 2.4942714728346598,
+      "cv_service": 0.31030883167183737,
+      "wq_h": 26.017638019124018,
+      "w_h": 33.2107528384815,
+      "lq_vessels": 8.766140411074932,
+      "l_vessels": 11.189721462249636
+    }
+  ],
+  "distribution_fit_diagnostics": {
+    "available": true,
+    "global": {
+      "distribution_ranked_first": "lognorm",
+      "ks_d": 0.03247186378156419,
+      "ks_p_nominal": 1.6090149086727583e-08
+    },
+    "by_service": {
+      "Austral Feeder": {
+        "distribution_ranked_first": "expon",
+        "ks_d": 0.0314249178976842,
+        "ks_p_nominal": 0.0009336154664904161
+      },
+      "Andes Container Line": {
+        "distribution_ranked_first": "lognorm",
+        "ks_d": 0.04194903184558385,
+        "ks_p_nominal": 1.6492397187750206e-05
+      },
+      "TransPatagonia Line": {
+        "distribution_ranked_first": "expon",
+        "ks_d": 0.03435663448038434,
+        "ks_p_nominal": 0.03964148611122431
+      }
+    },
+    "caution": "Los p-valores K-S convencionales no se interpretan como aceptación formal: los parámetros se estimaron con la misma muestra; se requiere calibración por bootstrap y análisis temporal/estacional."
+  },
+  "assumptions_and_limits": [
+    "Las tres bermas se aproximan como servidores paralelos homogéneos.",
+    "El tiempo de servicio usa una grúa por buque y la maniobra media de referencia de 1.5 h; no modela asignación dinámica ni interferencias entre buques.",
+    "No se incluyen turnos, patio, camiones, bloqueos de transporte ni cruceros en las fórmulas de filas.",
+    "El registro no contiene zarpadas; el tiempo de servicio de la fila se construye a partir de tasas nominales y no es una observación de estadía.",
+    "La aproximación G/G/3 es una sensibilidad; el CV agregado recoge agrupamiento y estacionalidad y no prueba estacionariedad."
+  ]
+}
