@@ -1,0 +1,4 @@
+model,servers,arrival_assumption,service_assumption,lambda_per_h,mean_service_h,rho,wq_h,w_h,lq_vessels,l_vessels
+M/M/3 Erlang C,3,Poisson estacionario,Exponencial con media empírica de trabajo nominal,0.3369306777437469,7.1931148193574765,0.807860350391568,8.236450977968186,15.429565797325662,2.775113010209968,5.198694061384672
+M/G/3 Allen-Cunneen,3,Poisson estacionario,Servicio general; variabilidad empírica construida,0.3369306777437469,7.1931148193574765,0.807860350391568,4.514775891106378,11.707890710463854,1.5211665008516009,3.9447475520263047
+G/G/3 Allen-Cunneen,3,Variabilidad agregada medida; estacionariedad no demostrada,Servicio general; variabilidad empírica construida,0.3369306777437469,7.1931148193574765,0.807860350391568,26.017638019124018,33.2107528384815,8.766140411074932,11.189721462249636
