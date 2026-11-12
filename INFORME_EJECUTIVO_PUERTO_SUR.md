@@ -8,25 +8,26 @@
 * **Materia:** 11.51 / IO51 - Investigación Operativa (ITBA)
 * **Trabajo:** Trabajo Práctico N.º 2: Simulación de Eventos Discretos — "Puerto Sur"
 * **Grupo:** Grupo 08
-* **Dataset Oficial Asignado:** `data/PuertoSur_escalas_G08.csv` (8.852 escalas históricas registradas)
+* **Integrantes:** De Palma, Benicio (65855) | Fanelli, Bautista (65773) | Malbrán, Santiago (65620)
+* **Dataset Oficial Asignado:** `data/PuertoSur_escalas_G08.csv` (8.852 escalas históricas registradas, 2023–2026)
 * **Caso de Estudio:** Terminal Portuaria Puerto Sur (Región Patagónica)
-* **Naturaleza del Documento:** Informe Técnico y Gerencial Autocontenido (Lectura y Evaluación Independiente del Código).
-* **Entorno de Programación:** Python 3.12 / SimPy 4.1.2 / Pandas / SciPy / Statsmodels / Matplotlib.
+* **Naturaleza del Documento:** Informe Técnico y Gerencial Autocontenido (Protocolo de 30 Réplicas e Inferencia Estadística al 95%).
+* **Entorno de Programación:** Python 3.12 / SimPy 4.1.2 / Pandas 2.2 / SciPy 1.13 / Statsmodels 0.14 / Matplotlib 3.8.
 * **Repositorio Oficial:** [https://github.com/Santim1897/TP2-IO](https://github.com/Santim1897/TP2-IO)
 
 ---
 
 ## Resumen Ejecutivo y Cuadro Consolidado de Respuestas
 
-| Consigna | Pregunta Clave de la Cátedra | Resultado Cuantitativo (Grupo 8 - Simulación Física) | Recomendación Estratégica |
+| Consigna | Pregunta Clave de la Cátedra | Resultado Cuantitativo (30 Réplicas ± IC 95%) | Recomendación Estratégica |
 | :--- | :--- | :--- | :--- |
-| **a) Modelo** | Formalización conceptual y operativa del puerto. | Modelado formal en SimPy con 3 bermas, contención física estricta de grúas STS, maniobras conjuntas de 1.5h y dinámica de patio. | Verificación matemática exitosa mediante la Ley de Little ($L = \lambda W$). |
-| **b) Operación Actual** | Estadía promedio ($W$), cantidad de buques ($L$) y desglose espera ($W_q$) vs. atención ($W_s$). | **$W = 15.00$ horas**, **$L = 5.05$ buques**, **$W_q = 7.90$ h (52.6%)**, **$W_s = 7.11$ h (47.4%)**.<br>• *Desglose en berma:* Atención efectiva de grúa: **$4.75$ h (31.7%)**, espera de grúa amarrado: **$0.86$ h (5.7%)**, maniobras náuticas: **$1.50$ h (10.0%)**.<br>• *Espera total inactiva:* **$58.3\%$** ($8.76$ h). El **$32.91\%$** de buques excede 16h (en *TransPatagonia Line* excede el **$45.1\%$**). | La queja de las navieras está justificada: casi 6 de cada 10 horas en puerto son demoras inactivas y 1 de cada 3 buques incumple el umbral. |
-| **c) Compromiso 16h y 4ª Grúa** | Demanda diaria máxima para $W \le 16\text{ h}$ y beneficio de una 4ª grúa STS. | Demanda máx. actual: **$\le 8.09$ buques/día** (pero con 32.9% de escalas excedidas). Con 4ª grúa: **$W$ cae a 9.38 h** ($W_q$ cae un **58.7%** a 3.26 h; incumplimiento cae a **11.85%**). | **Aprobar de inmediato la 4ª grúa**. Permite absorber holgadamente la demanda actual garantizando un nivel de servicio comercial robusto. |
-| **d) Política de Patio y Camiones** | Efecto de ventanas de camiones y slots reefer segregados. | Penalizar impuntualidad reduce la tasa de tardíos del 25% al 10%, estabilizando el patio por debajo del 75% ($>2.250$ slots). | Implementar penalidad por impuntualidad. Segregar slots reefer es esencial durante octubre–diciembre (temporada alta de fruta con +57% de demanda fría). |
-| **e) Temporada de Cruceros** | Viabilidad de reserva exclusiva de berma y canon compensatorio (USD 60.000 ofrecidos). | Reserva exclusiva preventiva añade **+2.31 h de estadía** a cada buque de carga (sobrecosto anual de **USD 4.26M a USD 8.52M**). | **Rechazar la reserva exclusiva**. El canon de equilibrio necesario para compensar a la carga sería de **USD 177.593 a USD 355.186 por escala** (3 a 6 veces lo ofrecido). Reportar cruceros **por separado**. |
-| **f) Proyecto Industrial (Incertidumbre)** | Recomendación ante escenarios Base (+35%) y Optimista (+100%). Convicción del directorio. | Con 3 bermas el puerto colapsa ante el crecimiento ($\rho > 1.13$). La 4ª berma es la **única alternativa admisible** bajo Wald, Savage, Hurwicz y Laplace. | La convicción de la directiva sobre el escenario base ratifica formalmente la urgencia de ampliar la infraestructura. |
-| **g) Repago 4ª Berma (USD 12M)** | Demanda para repago, período de repago y buques-año evitados. | Ahorro: **2.53 años-buque evitados/año**. Ahorro anual: **USD 20.76M/año**. Período de repago: **0.58 años (~7 meses)**. | **Invertir en la 4ª berma**. Se repaga en menos de un año bajo tráfico actual y prácticamente de inmediato con el proyecto industrial. |
+| **a) Modelo** | Formalización conceptual y operativa del puerto. | Modelado en SimPy verificado con 7 casos manuales. Modelo analítico de colas M/M/3 coincide ($W=10.35$h vs $W=10.48$h). | Modelo validado física y conceptualmente. |
+| **b) Operación Actual** | Estadía promedio ($W$), cantidad de buques ($L$) y desglose espera ($W_q$) vs. atención ($W_s$). | **$W = 10.48 \pm 0.37$ h**, **$W_q = 3.75$ h**, **$Ws = 6.73$ h**.<br>• Incumplimiento umbral 16h: **$14.8\%$**.<br>• Test $H_0 (\mu_W \ge 16\text{ h})$: **Rechazada contundentemente ($p = 5.44 \times 10^{-24}$)**. | Operación cumple en promedio ($W < 16$h), pero colas en picos estacionales justifican mejoras de capacidad. |
+| **c) Compromiso 16h y 4ª Grúa** | Demanda diaria máxima para $W \le 16\text{ h}$ y beneficio de una 4ª grúa STS. | Con 4ª grúa: **$W$ cae a $7.74 \pm 0.14$ h** ($W_q$ cae un **52.3%** a 1.79 h; incumplimiento cae a **3.9%**). Reducción de 2.74h estadísticamente significativa ($p < 0.001$ en Tukey). | **Aprobar de inmediato la 4ª grúa**. Permite absorber holgadamente la demanda actual garantizando un nivel de servicio comercial robusto. |
+| **d) Política de Patio y Camiones** | Efecto de ventanas de camiones y Little. | Little demuestra que dwell time de 72h requeriría 3.458 slots (>3.000). Penalizar impuntualidad sostiene permanencia efectiva en ~46-48h y evita congestión >75%. | Implementar penalidad por impuntualidad. Segregar slots reefer es esencial durante octubre–diciembre (temporada de fruta con +55% de reefer). |
+| **e) Temporada de Cruceros** | Viabilidad de reserva exclusiva de berma y canon compensatorio (USD 60.000 ofrecidos). | Reserva preventiva de 14h garantiza **0.00 h de espera en rada al crucero**. Añade **+0.84 h de demora a la carga** ($p = 0.0024$ en Tukey). | **Rechazar la reserva exclusiva**. El canon de USD 60.000 no compensa los sobrecostos de inmovilización generados a la carga. Reportar cruceros **por separado**. |
+| **f) Proyecto Industrial (Incertidumbre)** | Recomendación ante escenarios Base (+35%) y Optimista (+100%). Convicción del directorio. | Con 3 bermas el puerto colapsa ante el crecimiento ($W=254.12$ h con +35% y $W=2.126$ h con +100%). La 4ª berma recupera $W = 9.09 \pm 0.19$ h y domina en Wald, Savage, Hurwicz y Laplace. | La convicción de la directiva sobre el escenario base ratifica formalmente la urgencia de ampliar la infraestructura a 4 bermas. |
+| **g) Repago 4ª Berma (USD 12M)** | Demanda para repago, período de repago y buques-año evitados. | Evita **111.4 años-buque de inmovilización al año** (976.057 horas evitadas). Ahorro anual: **>USD 610M/año**. Período de repago: **< 1 mes**. | **Invertir en la 4ª berma**. Retorno económico indiscutible ante el costo de colapso portuario. |
 
 ---
 

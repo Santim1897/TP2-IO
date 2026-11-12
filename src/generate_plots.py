@@ -62,30 +62,34 @@ plt.close()
 print("Guardado: fig1_capacidad_demanda.png")
 
 # -------------------------------------------------------------------------
-# FIGURA 2: Desglose de Estadía: Ws vs Wq (Consigna b)
+# FIGURA 2: Desglose de Estadía: Ws vs Wq (Protocolo 30 Réplicas)
 # -------------------------------------------------------------------------
-df_base = pd.read_csv(f'{out_dir}/resumen_base_vs_4gruas.csv')
+df_rep = pd.read_csv(f'{out_dir}/resumen_30_replicas_ic95.csv')
 
-fig, ax = plt.subplots(figsize=(8, 5), dpi=300)
+row_base = df_rep[df_rep['Configuracion'] == '1_Base_3B_3G'].iloc[0]
+row_4g = df_rep[df_rep['Configuracion'] == '2_Mejora_3B_4G'].iloc[0]
+
+fig, ax = plt.subplots(figsize=(8, 5.2), dpi=300)
 
 configs = ['3 Grúas (Actual)', '4 Grúas (Mejora)']
-wq_vals = [df_base.loc[df_base['Config']=='Actual_3G_3B', 'Wq'].values[0], df_base.loc[df_base['Config']=='Mejora_4G_3B', 'Wq'].values[0]]
-ws_vals = [df_base.loc[df_base['Config']=='Actual_3G_3B', 'Ws'].values[0], df_base.loc[df_base['Config']=='Mejora_4G_3B', 'Ws'].values[0]]
+wq_vals = [row_base['Wq_Media'], row_4g['Wq_Media']]
+ws_vals = [row_base['Ws_Media'], row_4g['Ws_Media']]
+w_deltas = [row_base['W_Delta_IC95'], row_4g['W_Delta_IC95']]
 
 p1 = ax.bar(configs, ws_vals, width=0.45, label='Tiempo en Berma (Ws) [Atención + Maniobra]', color='#5cb85c')
 p2 = ax.bar(configs, wq_vals, width=0.45, bottom=ws_vals, label='Tiempo de Espera en Rada (Wq) [Cola estéril]', color='#f0ad4e')
 ax.axhline(16.0, color='darkred', linestyle='--', linewidth=2, label='Umbral Máximo Contractual (16h)')
 
-# Etiquetas de valor
+# Etiquetas de valor e intervalos de confianza
 for i in range(2):
     tot = ws_vals[i] + wq_vals[i]
     ax.text(i, ws_vals[i]/2, f"{ws_vals[i]:.2f} h\n({(ws_vals[i]/tot)*100:.1f}%)", ha='center', va='center', color='white', fontweight='bold')
     ax.text(i, ws_vals[i] + wq_vals[i]/2, f"{wq_vals[i]:.2f} h\n({(wq_vals[i]/tot)*100:.1f}%)", ha='center', va='center', color='black', fontweight='bold')
-    ax.text(i, tot + 0.6, f"Total: {tot:.2f} h", ha='center', va='bottom', color='black', fontweight='bold', fontsize=11)
+    ax.text(i, tot + 0.5, f"W = {tot:.2f} ± {w_deltas[i]:.2f} h\n(IC 95%)", ha='center', va='bottom', color='black', fontweight='bold', fontsize=10.5)
 
 ax.set_ylabel('Tiempo Promedio (Horas)', fontweight='bold')
-ax.set_ylim(0, 30)
-ax.set_title('Desglose del Tiempo de Estadía: Espera en Rada (Wq) vs. Servicio en Berma (Ws)', fontweight='bold', pad=15)
+ax.set_ylim(0, 20)
+ax.set_title('Desglose de Estadía y Espera en Rada (Media ± IC 95% — 30 Réplicas)', fontweight='bold', pad=15)
 ax.legend(loc='upper right', frameon=True, framealpha=0.9)
 plt.tight_layout()
 plt.savefig(f'{out_dir}/fig2_desglose_estadia.png', dpi=300)
@@ -126,11 +130,11 @@ print("Guardado: fig3_repago_berma.png")
 # -------------------------------------------------------------------------
 # FIGURA 4: Test de Tukey HSD (Intervalos de Confianza al 95%)
 # -------------------------------------------------------------------------
-df_tukey = pd.read_csv(f'{out_dir}/tukey_hsd_resultados.csv')
+df_tukey = pd.read_csv(f'{out_dir}/tukey_hsd_replicas.csv')
 
-fig, ax = plt.subplots(figsize=(9, 4.8), dpi=300)
+fig, ax = plt.subplots(figsize=(9.5, 5.0), dpi=300)
 
-comparaciones = [f"{row['group1']} vs\n{row['group2']}" for _, row in df_tukey.iterrows()]
+comparaciones = [f"{row['group1'].replace('_', ' ')} vs\n{row['group2'].replace('_', ' ')}" for _, row in df_tukey.iterrows()]
 y_pos = np.arange(len(comparaciones))
 
 ax.errorbar(
@@ -142,13 +146,13 @@ ax.axvline(0, color='black', linestyle='--', linewidth=1.5)
 
 ax.set_yticks(y_pos)
 ax.set_yticklabels(comparaciones, fontsize=9)
-ax.set_xlabel('Diferencia de Medias en Tiempo de Estadía (Horas, IC 95%)', fontweight='bold')
-ax.set_title('Test de Tukey HSD (FWER = 0.05) entre Configuraciones Operativas', fontweight='bold', pad=15)
+ax.set_xlabel('Diferencia de Medias en Tiempo de Estadía W (Horas, IC 95%)', fontweight='bold')
+ax.set_title('Comparaciones Múltiples de Tukey HSD (alpha = 0.05, 30 Réplicas)', fontweight='bold', pad=15)
 
 for i, (_, row) in enumerate(df_tukey.iterrows()):
-    sig_text = "Significativo (p < 0.05)" if row['reject'] else "No Significativo"
+    sig_text = "Rechaza H0 (p < 0.05)" if row['reject'] else "No Rechaza H0"
     color_text = "#d9534f" if row['reject'] else "gray"
-    ax.text(row['upper'] + 1.0, i, sig_text, va='center', fontsize=8.5, color=color_text, fontweight='bold')
+    ax.text(row['upper'] + 0.3, i, sig_text, va='center', fontsize=8.5, color=color_text, fontweight='bold')
 
 plt.tight_layout()
 plt.savefig(f'{out_dir}/fig4_tukey_hsd.png', dpi=300)
