@@ -1,4 +1,4 @@
-import sys, time
+import hashlib, subprocess, sys, time
 from pathlib import Path
 import pandas as pd, numpy as np
 from scipy import stats
@@ -9,6 +9,7 @@ from src.paths import DATA_G08_CSV, PLOTS_DIR
 from src.simulador import PuertoSurSim
 N=30; BASE=202601; STEP=101
 OUT=PLOTS_DIR/"entrega_c_reproducible"; OUT.mkdir(parents=True,exist_ok=True)
+start=time.time()
 rows=[]
 for pol in ("sin_crucero","crucero_sin_exclusividad","crucero_exclusivo"):
     for i in range(N):
@@ -36,6 +37,7 @@ for pol,g in df.groupby("policy",sort=False):
         x=g[metric].dropna().to_numpy()
         if len(x):
             m,lo,hi=ci(x); rec.update({metric+"_mean":m,metric+"_ci_low":lo,metric+"_ci_high":hi})
+    rec["cruises_per_replication_mean"] = float(g["n_cruises"].mean())
     ss.append(rec)
 pd.DataFrame(ss).to_csv(OUT/"cruise_window_summary.csv",index=False)
 cs=[]
@@ -46,6 +48,17 @@ for pol in ("crucero_sin_exclusividad","crucero_exclusivo"):
     cs.append({"contrast":pol+" minus sin_crucero","mean_delta_W_h":m,"ci95_low":lo,"ci95_high":hi,
                "p_paired_two_sided":stats.ttest_rel(a,b).pvalue})
 pd.DataFrame(cs).to_csv(OUT/"cruise_window_contrasts.csv",index=False)
+csv_path=Path(DATA_G08_CSV)
+sim_path=BASE_DIR/"src/simulador.py"
+meta={"source_csv":str(csv_path.relative_to(BASE_DIR)),"source_rows":int(len(pd.read_csv(csv_path))),
+      "source_commit":subprocess.check_output(["git","rev-parse","HEAD"],cwd=BASE_DIR,text=True).strip(),
+      "source_csv_sha256":hashlib.sha256(csv_path.read_bytes()).hexdigest(),
+      "simulator_sha256":hashlib.sha256(sim_path.read_bytes()).hexdigest(),
+      "replications":N,"seed_formula":f"{BASE} + (replication-1)*{STEP}",
+      "window_hours":[1440,3600],"cruise_interval_hours":84,"arrival_jitter_hours":[-3,3],
+      "expected_cruises_per_replication":25,"runtime_seconds":round(time.time()-start,2),
+      "script":"src/experiments/recompute_cruise_window_c.py"}
+(OUT/"cruise_window_metadata.json").write_text(__import__("json").dumps(meta,indent=2),encoding="utf-8")
 print(pd.DataFrame(ss).to_string(index=False),flush=True)
 print(pd.DataFrame(cs).to_string(index=False),flush=True)
-print("runtime",round(time.time()-start,2) if "start" in globals() else "done",flush=True)
+print("runtime",round(time.time()-start,2),flush=True)

@@ -381,14 +381,15 @@ class PuertoSurSim:
           del arribo programado para asegurar que buques feeder previos ya hayan desatracado,
           garantizando 0.00 horas de espera en rada para el crucero.
         """
-        t_reloj = inicio_horas
+        t_programado = inicio_horas
         intervalo = 168.0 / 2.0  # 84h
         id_c = 1
 
-        while t_reloj + intervalo < fin_horas:
-            # Calcular arribo del próximo crucero con anticipación
+        while t_programado + intervalo < fin_horas:
+            # Mantener un horario de arribos cada 84 h, independiente de la estadía.
+            t_programado += intervalo
             dispersion = random.uniform(-3.0, 3.0)
-            t_llegada_crucero = t_reloj + intervalo + dispersion
+            t_llegada_crucero = t_programado + dispersion
             
             req_berma = None
             if self.politica_crucero == "crucero_exclusivo":
@@ -423,7 +424,6 @@ class PuertoSurSim:
                 "duracion": duracion_crucero,
                 "t_zarpada": self.env.now
             })
-            t_reloj = self.env.now
             id_c += 1
 
     def _generar_escalas_estocasticas(self, dias_sim: float) -> List[EscalaData]:

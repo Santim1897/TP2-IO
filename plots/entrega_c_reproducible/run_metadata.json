@@ -1,27 +1,19 @@
 {
   "source_csv": "data/PuertoSur_escalas_G08.csv",
   "source_rows": 8852,
+  "source_commit": "da1151976ba8d2bf1394f84623308db16607053c",
+  "source_csv_sha256": "c4390d32d383a2afe6a8313de7b83fbf4500b0c10ade8671d7514b3fbe78d2d9",
+  "simulator_sha256": "029219715f9e43901c500ac88b2a785ba1c158437288d03c79bed1c59648bc85",
   "replications": 30,
   "seed_formula": "202601 + (replication-1)*101",
   "warmup_hours": 1440.0,
   "completed_rows": 510,
-  "runtime_seconds": 421.95,
+  "runtime_seconds": 185.36,
   "script": "src/experiments/recompute_campaign_c.py",
   "notes": [
     "Historical G08 arrival data; same 60-day warm-up in all alternatives.",
     "Demand factors below 1.00 are reproducible random subsamples (random_state=42).",
     "Cruise outcomes and feeder outcomes are reported separately.",
     "Payback is gross simple payback using the paired simulated berth effect and stated USD 15k-30k per vessel-day, before operating costs."
-  ],
-  "source_commit": "da1151976ba8d2bf1394f84623308db16607053c",
-  "source_csv_sha256": "c4390d32d383a2afe6a8313de7b83fbf4500b0c10ade8671d7514b3fbe78d2d9",
-  "simulator_sha256": "029219715f9e43901c500ac88b2a785ba1c158437288d03c79bed1c59648bc85",
-  "n_scenarios": 17,
-  "replications_per_scenario": 30,
-  "campaign_scripts": [
-    "src/experiments/recompute_campaign_c.py",
-    "src/experiments/recompute_supplementary_c.py",
-    "src/experiments/recompute_cruise_window_c.py",
-    "src/experiments/recompute_anova_tukey_c.py"
   ]
 }

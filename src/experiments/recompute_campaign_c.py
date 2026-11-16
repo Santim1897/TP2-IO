@@ -3,7 +3,9 @@
 Run from repository root:
 python src/experiments/recompute_campaign_c.py
 """
+import hashlib
 import json
+import subprocess
 import time
 import sys
 from pathlib import Path
@@ -156,9 +158,9 @@ def main():
 
     meta = {
         "source_csv": str(DATA_G08_CSV.relative_to(BASE_DIR)), "source_rows": int(len(df)),
-        "source_commit": "da1151976ba8d2bf1394f84623308db16607053c",
-        "source_csv_sha256": "c4390d32d383a2afe6a8313de7b83fbf4500b0c10ade8671d7514b3fbe78d2d9",
-        "simulator_sha256": "029219715f9e43901c500ac88b2a785ba1c158437288d03c79bed1c59648bc85",
+        "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=BASE_DIR, text=True).strip(),
+        "source_csv_sha256": hashlib.sha256(DATA_G08_CSV.read_bytes()).hexdigest(),
+        "simulator_sha256": hashlib.sha256((BASE_DIR / "src/simulador.py").read_bytes()).hexdigest(),
         "replications": N, "seed_formula": f"{BASE_SEED} + (replication-1)*{SEED_STEP}",
         "warmup_hours": WARMUP_H, "completed_rows": len(raw),
         "runtime_seconds": round(time.time()-started, 2),

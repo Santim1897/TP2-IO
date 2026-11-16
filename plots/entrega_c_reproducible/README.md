@@ -4,9 +4,11 @@ El informe oficial de Entrega C es `INFORME_FINAL_ENTREGA_C_GRUPO08.docx`, en la
 
 ## Procedencia
 
-La campaña se ejecutó con el simulador y los datos G08 existentes en el commit fuente `da1151976ba8d2bf1394f84623308db16607053c`. El CSV contiene 8.852 escalas. Este commit incorpora los scripts de reproducción, sus resultados y el informe actualizado; no cambia `src/simulador.py` ni el dataset usado para la corrida.
+La campaña usa el CSV G08 de 8.852 escalas y la versión del simulador incluida en el historial de Git. El calendario de cruceros programa arribos cada 84 horas, con variación independiente de ±3 horas. La comparación de la ventana de 90 días genera 25 arribos por réplica. Los metadatos registran los hashes del CSV y del simulador para identificar exactamente cada corrida.
 
-`run_metadata.json` registra las semillas, el calentamiento, el tiempo de ejecución y los SHA-256 del CSV y del simulador. `supplement_metadata.json` identifica de igual manera los análisis complementarios.
+`run_metadata.json`, `cruise_window_metadata.json` y `supplement_metadata.json` registran las semillas, los períodos de análisis, el tiempo de ejecución y los SHA-256 de los datos y el simulador.
+
+Los archivos `plots/experimento_cruceros_transparente.csv` y `plots/experimento_cruceros_transparente_resumen.csv` son resultados exploratorios anteriores, con otro horizonte y configuración. No son la base numérica de la comparación final de cruceros; para esa comparación se usan `cruise_window_replications.csv`, `cruise_window_summary.csv` y `cruise_window_contrasts.csv` de esta carpeta.
 
 ## Reproducción
 
@@ -28,4 +30,4 @@ Los scripts escriben las tablas y figuras en esta carpeta. La campaña principal
 - En el barrido de demanda, 3 grúas cumplen ambos objetivos hasta el factor probado 0,85; 4 grúas los cumplen en el factor 1,00.
 - Las alternativas industriales que no completan las 30 corridas se reportan como censuradas. No se interpreta una estadía estable a partir de esas corridas.
 
-Las cifras completas, sus intervalos y las limitaciones de cada comparación están en el informe oficial y en los CSV de esta carpeta.
+La carpeta contiene 21 archivos contando este README; 20 son scripts, tablas, figuras o metadatos. Las cifras completas, sus intervalos y las limitaciones de cada comparación están en el informe oficial y en los CSV de esta carpeta.
