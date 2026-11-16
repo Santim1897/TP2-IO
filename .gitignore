@@ -54,3 +54,6 @@ output/
 temp/
 logs/
 *.log
+
+# Personal / external docs
+SPEECH_*.docx

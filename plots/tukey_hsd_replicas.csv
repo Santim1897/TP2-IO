@@ -1,0 +1,7 @@
+group1,group2,meandiff,p-adj,lower,upper,reject
+1_Base_3B_3G,2_Mejora_3B_4G,-2.7413,0.0,-3.3476,-2.135,True
+1_Base_3B_3G,3_Patio_CamionPenal,0.0,1.0,-0.6063,0.6063,False
+1_Base_3B_3G,4_Crucero_Exclusivo,0.8424,0.0024,0.2361,1.4486,True
+2_Mejora_3B_4G,3_Patio_CamionPenal,2.7413,0.0,2.135,3.3476,True
+2_Mejora_3B_4G,4_Crucero_Exclusivo,3.5836,0.0,2.9774,4.1899,True
+3_Patio_CamionPenal,4_Crucero_Exclusivo,0.8424,0.0024,0.2361,1.4486,True

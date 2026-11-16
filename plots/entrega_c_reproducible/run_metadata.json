@@ -1,0 +1,19 @@
+{
+  "source_csv": "data/PuertoSur_escalas_G08.csv",
+  "source_rows": 8852,
+  "source_commit": "6605f87988710e7f131bec45d8116abda6608001",
+  "source_csv_sha256": "c4390d32d383a2afe6a8313de7b83fbf4500b0c10ade8671d7514b3fbe78d2d9",
+  "simulator_sha256": "de3a31761b7a727ef885f829630ace01bbd7a67b8397cb52b858a7787eab417c",
+  "replications": 30,
+  "seed_formula": "202601 + (replication-1)*101",
+  "warmup_hours": 1440.0,
+  "completed_rows": 510,
+  "runtime_seconds": 185.36,
+  "script": "src/experiments/recompute_campaign_c.py",
+  "notes": [
+    "Historical G08 arrival data; same 60-day warm-up in all alternatives.",
+    "Demand factors below 1.00 are reproducible random subsamples (random_state=42).",
+    "Cruise outcomes and feeder outcomes are reported separately.",
+    "Payback is gross simple payback using the paired simulated berth effect and stated USD 15k-30k per vessel-day, before operating costs."
+  ]
+}
