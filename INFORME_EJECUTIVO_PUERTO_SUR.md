@@ -1,6 +1,6 @@
 # Entrega C — resumen de resultados vigente
 
-La versión entregable y completa es el Word `INFORME_FINAL_ENTREGA_C_GRUPO08.docx`, ubicado en la raíz del repositorio. Este Markdown resume las cifras de esa versión. El informe versionado `docs/ParteC_Puerto_Sur_G08_CORREGIDA_v4.docx` es histórico y fue reemplazado para la entrega por el Word de la raíz.
+La versión entregable y completa es el Word `INFORME_FINAL_ENTREGA_C_GRUPO08.docx`, ubicado en la raíz del repositorio. Este Markdown resume las cifras de esa versión. Los documentos previos de Entrega C conservados en `docs/` son históricos; el Word de la raíz es la única versión oficial para entregar.
 
 ## Corrida y procedencia
 

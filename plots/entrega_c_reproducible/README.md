@@ -1,6 +1,6 @@
 # Entrega C: campaña reproducible
 
-El informe oficial de Entrega C es `INFORME_FINAL_ENTREGA_C_GRUPO08.docx`, en la raíz del repositorio. El archivo `docs/ParteC_Puerto_Sur_G08_CORREGIDA_v4.docx` se conserva como versión histórica; sus cifras no deben usarse en lugar del informe oficial actualizado.
+El informe oficial de Entrega C es `INFORME_FINAL_ENTREGA_C_GRUPO08.docx`, en la raíz del repositorio. Los documentos previos de Entrega C que están en `docs/` se conservan como archivo histórico (`ParteC_Experimentacion_y_Analisis_Puerto_Sur_G08_COMPLETO.docx`, `ParteC_Puerto_Sur_G08_CORREGIDA.docx` y `ParteC_Puerto_Sur_G08_CORREGIDA_v4.docx`); sus cifras no deben usarse en lugar del informe oficial actualizado.
 
 ## Procedencia
 
