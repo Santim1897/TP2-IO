@@ -8,7 +8,7 @@ La campaña usa el CSV G08 de 8.852 escalas y la versión del simulador incluida
 
 `run_metadata.json`, `cruise_window_metadata.json` y `supplement_metadata.json` registran las semillas, los períodos de análisis, el tiempo de ejecución y los SHA-256 de los datos y el simulador.
 
-Los archivos `plots/experimento_cruceros_transparente.csv` y `plots/experimento_cruceros_transparente_resumen.csv` son resultados exploratorios anteriores, con otro horizonte y configuración. No son la base numérica de la comparación final de cruceros; para esa comparación se usan `cruise_window_replications.csv`, `cruise_window_summary.csv` y `cruise_window_contrasts.csv` de esta carpeta.
+El archivo `plots/experimento_cruceros_transparente.csv` contiene un resultado exploratorio anterior, con otro horizonte y configuración. No es la base numérica de la comparación final de cruceros; para esa comparación se usan `cruise_window_replications.csv`, `cruise_window_summary.csv` y `cruise_window_contrasts.csv` de esta carpeta.
 
 ## Reproducción
 
