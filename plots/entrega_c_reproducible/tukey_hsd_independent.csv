@@ -1,0 +1,7 @@
+metric,group1,group2,mean_difference,p_adjusted,ci95_low,ci95_high,reject
+W_h,3B_3G,3B_4G,-3.6792,0.0,-3.7008,-3.6577,True
+W_h,3B_3G,4B_3G,-2.879,0.0,-2.9005,-2.8574,True
+W_h,3B_4G,4B_3G,0.8003,0.0,0.7787,0.8218,True
+P_W_le_16_pct,3B_3G,3B_4G,15.4375,0.0,15.3171,15.558,True
+P_W_le_16_pct,3B_3G,4B_3G,13.6654,0.0,13.545,13.7858,True
+P_W_le_16_pct,3B_4G,4B_3G,-1.7722,0.0,-1.8926,-1.6517,True

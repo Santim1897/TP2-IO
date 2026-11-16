@@ -1,0 +1,5 @@
+scenario,n_replications,all_completed_replicas,mean_completion_pct,valid_steady_state_W,W_completed_only_h_mean,W_completed_only_h_ci95_low,W_completed_only_h_ci95_high,P16_completed_only_pct_mean,P16_completed_only_pct_ci95_low,P16_completed_only_pct_ci95_high
+industrial_1.35_3B_3G,30,0,94.31771269177128,False,,,,,,
+industrial_1.35_4B_3G,30,30,100.0,True,36.09980146811283,35.2065579972132,36.99304493901246,28.736704160836968,28.15794760973998,29.315460711933955
+industrial_2.00_3B_3G,30,0,63.6876788672993,False,,,,,,
+industrial_2.00_4B_3G,30,0,73.66131947582467,False,,,,,,
